@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Dashboard-specific styles scoped to dashboard-wrapper */
+        .dashboard-wrapper {
+            background-color: #f4f9f4; /* Light greenish background */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .dashboard-wrapper h1,
+        .dashboard-wrapper h3 {
+            color: #2c6e49; /* Forest green for headings */
+            font-weight: bold;
+        }
+
+        .dashboard-wrapper p,
+        .dashboard-wrapper li {
+            color: #52734d; /* Medium green for text */
+        }
+
+        .dashboard-wrapper .row div {
+            background-color: #e6f5e6; /* Light green for cards */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-wrapper ul {
+            list-style-type: none;
+            padding-left: 0;
+            overflow-y: auto;
+        }
+
+        .dashboard-wrapper ul li {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #d9f7d4; /* Light green background for suggestions */
+            border-left: 5px solid #2c6e49; /* Green left border for each suggestion */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .dashboard-wrapper ul li:hover {
+            transform: scale(1.05); /* Slightly enlarge the suggestion card on hover */
+        }
+
+        /* Flexbox layout for consistent size and behavior */
+        .dashboard-wrapper .col-md-4 {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .dashboard-wrapper .col-md-4 .points-card,
+        .dashboard-wrapper .col-md-4 .co2-card {
+            flex-grow: 1; /* Let these sections grow to fill space */
+        }
+
+        .dashboard-wrapper .col-md-4 .suggestions-card {
+            flex-grow: 2; /* Suggestion card takes a bit more space */
+            max-height: 400px; /* Set a max height for the suggestions section */
+            overflow-y: auto; /* Scrollable if content overflows */
+        }
+
+        .dashboard-wrapper footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #2c6e49;
+            font-size: 0.9rem;
+        }
+
+        .points-card,
+        .co2-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .points-card h3,
+        .co2-card h3 {
+            color: #2c6e49;
+            font-weight: bold;
+        }
+        .dashboard-wrapper .col-md-4 {
+    overflow: visible; /* Ensure overflow is not clipped */
+}
+
+
+        .points-card p,
+        .co2-card p {
+            color: #52734d;
+        }
+        .col-md-4 {
+    display: flex; /* Ensure content is flexibly arranged */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center the content */
+}
+
+
+        /* CO2 Progress Bar Styling */
+        .progress-bar {
+            height: 30px;
+            border-radius: 10px;
+            overflow: visible;
+        }
+
+        .progress-bar-success {
+            background-color: #28a745;
+        }
+
+        .progress-bar-warning {
+            background-color: #ffc107;
+        }
+
+        .progress-bar-danger {
+            background-color: #dc3545;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-wrapper container mt-4">
+        <h2 class="text-center">Welcome, <%= username %>!</h2>
+
+       
+        <div class="row mt-4">
+            <!-- Points Section -->
+      
+<div class="col-md-4">
+    <div class="points-card" style="background: linear-gradient(135deg, #3b8d99, #6a11cb); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Points</h3>
+        
+        <!-- Icon Section -->
+         
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="https://imgbb.com/"><img src="https://i.ibb.co/s56NLRW/download.jpg" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)" alt="download" border="0"></a>
+
+        </div>
+        
+        <!-- Points Data -->
+        <div style="font-size: 2em; color: white; font-weight: bold; margin-bottom: 20px; text-align: center;">
+            <p class="display-6" style="color: black;"><%= points %></p>
+        </div>
+
+        <!-- Points Progress Bar (Optional) -->
+        <div style="width: 100%; height: 15px; background-color: #f1f1f1; border-radius: 10px; overflow: hidden;">
+            <div style="width: <%= points %>%; height: 100%; background-color: #ffb84d;"></div>
+        </div>
+        <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your current points</p>
+    </div>
+</div>
+
+            <div class="col-md-4">
+                <div class="card">
+            <h2>CO₂ Activity Breakdown</h2>
+            <canvas id="myPieChart"></canvas>
+            </div>
+        </div>
+           <!-- CO₂ Footprint Section -->
+<div class="col-md-4">
+    <div class="co2-card" style="background: linear-gradient(135deg, #52b788, #ffadad); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">CO₂ Footprint</h3>
+        
+        <!-- Icon Section -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/earth-planet.png"  alt="Earth Icon" />
+        </div>
+        
+        <!-- Emission Data -->
+        <div style="font-size: 1.2em; color: white; margin-bottom: 10px;">
+            <p><strong>Emitted:</strong> <%= co2Emitted %> kg</p>
+            <p><strong>Maximum Threshold:</strong> <%= maxCo2Footprint %> kg</p>
+            <p><strong>Contribution:</strong> <%= contribution %>%</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="width: 100%; height: 15px; background-color: #f1f1f1; border-radius: 10px; overflow: hidden;">
+            <div style="width: <%= contribution %>%; height: 100%; background-color: #ffb84d;"></div>
+        </div>
+        <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your contribution to the total CO₂ footprint amoung the users</p>
+    </div>
+</div>
+            <!-- Your Emission Level Section -->
+<div class="col-md-4">
+    <div class="emission-card" style="background: linear-gradient(135deg, #ff6a00, #ff8e00); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Emission Level</h3>
+        
+        <!-- Icon Section -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="https://imgbb.com/"><img src="https://i.ibb.co/KNcvGkJ/print2.webp"  style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)". alt="print2" ></a>
+            
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress" style="height: 30px; margin-bottom: 15px;">
+            <div 
+                class="progress-bar" 
+                role="progressbar" 
+                style="width: <%= co2Percentage %>%; background-color: #f44336;" 
+                aria-valuenow="<%= co2Percentage %>" 
+                aria-valuemin="0" 
+                aria-valuemax="100">
+            </div>
+        </div>
+
+        <!-- Emission Data -->
+        <div style="font-size: 1.1em; color: white; font-weight: bold; text-align: center; margin-bottom: 15px;">
+            <p style="color: black;">You've emitted <%= co2Emitted %> kg of CO₂ out of your maximum allowed <%= maxCo2Footprint %> kg.</p>
+        </div>
+        
+        <!-- Emission Status -->
+        <p style="text-align: center; color: white; font-size: 0.9em;">Based on your current emission level, <%= co2Percentage %>% of your limit has been used.</p>
+    </div>
+</div>
+
+
+            <div class="col-md-4">
+                <div class="card">
+            <h3 class="text-center">Monthly CO2 Footprint</h3>
+        <canvas id="co2Chart" width="400" height="200"></canvas>
+    </div>
+ 
+        <div class="card">
+            <h3>Emission Vs Reduction for <%= new Date().toLocaleString('default', { month: 'long' }) %></h3>
+    <canvas id="categoryChart" width="400" height="400"></canvas>
+     
+   </div>
+</div>
+            
+            <!-- Suggestions Section -->
+            <div class="col-md-4">
+                <div class="suggestions-card">
+                    <h3>Suggestions</h3>
+                    <ul>
+                        <% if (typeof suggestions !== 'undefined' && suggestions && suggestions.length > 0) { %>
+                            <% suggestions.forEach((suggestion, index) => { %>
+                                <li>
+                                    <strong>Suggestion <%= index + 1 %>:</strong> <%= suggestion %>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li>No suggestions available at the moment.</li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+
+           
+        </div>
+    </div>
+    
+  
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const co2Data = [50, 60, 70, 65, 80, 75, 85, 90, 95, 85, 80, 75];
+
+        const ctx = document.getElementById('co2Chart').getContext('2d');
+        const co2Chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'CO2 Footprint (kg)',
+                    data: co2Data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (kg)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+    <script>
+         document.addEventListener('DOMContentLoaded', function () {
+        async function fetchBreakdown() {
+            const response = await fetch('/activityRoute2/category-breakdown');
+            const data = await response.json();
+
+            // Prepare data for the chart
+            const labels = data.map(item => item._id); // ['emission', 'reduction']
+            const values = data.map(item => item.totalCo2); // Total CO2 values
+
+            // Render chart
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#FF6384', '#36A2EB'], // Colors for categories
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const value = tooltipItem.raw;
+                                    return `${tooltipItem.label}: ${value.toFixed(2)} kg CO2`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchBreakdown();
+    });
+    </script>
+
+<script>
+    // Fetch the CO₂ breakdown data from the server
+    document.addEventListener('DOMContentLoaded', function () {
+        async function fetchBdown() {
+            const response = await fetch('/activityRoute2/activity-breakdown');
+            const data = await response.json();
+
+            const categories = data.categories.map(item => item.label);
+            const co2Values = data.categories.map(item => item.value);
+
+            // Create pie chart with fetched data
+            const ctx = document.getElementById('myPieChart').getContext('2d');
+            const myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        data: co2Values,
+                        backgroundColor: ['#52b788', '#ffadad', '#ffb84d', '#ffd700', '#ff9999'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + ' kg CO₂';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+    fetchBdown();
+    });
+</script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

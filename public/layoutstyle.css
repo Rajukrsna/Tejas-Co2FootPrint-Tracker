@@ -1,0 +1,71 @@
+  /* General Body Styling */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Styling */
+.navbar {
+    background: linear-gradient(45deg, #ff6f61, #ffbc00); /* Radiant gradient color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: white !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Making the logo round */
+    margin-right: 15px;
+    object-fit: cover; /* Ensuring the logo is contained in the circle */
+}
+
+.nav-link {
+    color: white !important;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #ffd700 !important; /* Golden color on hover */
+}
+
+/* Main Content Styling */
+.container {
+    margin-top: 70px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Styling */
+footer {
+    background-color: #f1f1f1;
+    color: #333;
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+/* Custom Animations */
+.nav-item {
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+    transform: scale(1.05);
+}
+
+/* Radiant Hover Effects */
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}

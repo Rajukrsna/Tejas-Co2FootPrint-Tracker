@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+   <link rel="stylesheet" href="/public/leaderboard.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+
+        <!-- Confetti Animation for Top Rank -->
+        <div class="confetti">
+            <span style="animation-delay: 0.2s;"></span>
+            <span style="animation-delay: 0.4s;"></span>
+            <span style="animation-delay: 0.6s;"></span>
+            <span style="animation-delay: 0.8s;"></span>
+            <span style="animation-delay: 1s;"></span>
+        </div>
+
+        <table class="table table-striped animate__animated animate__fadeIn">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Points</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach((use, index) => { %>
+                    <tr class="<%= index === 0 ? 'animate__animated animate__flash' : '' %>">
+                        <td><%= index + 1 %> 
+                            <span class="emoji">
+                                <%= index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '' %>
+                            </span>
+                        </td>
+                        <td><%= use.username %></td>
+                        <td><%= use.points %></td>
+                        <td>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: <%= use.points %>%; background-color: <%= use.points > 75 ? '#4CAF50' : use.points > 50 ? '#FFC107' : '#F44336' %>;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>Leaderboard powered by our awesome community!</p>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

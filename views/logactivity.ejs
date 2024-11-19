@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Points - CO₂ Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="/public/logactivity.css">
+</head>
+
+<body>
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Earn Points by Uploading Proof</h1>
+        <div class="row text-center">
+            <!-- Category Cards -->
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Used Bicycle">
+                    <a href=""><img src="https://i.ibb.co/80MtHpm/cycle.jpg" class="card-img-top category-img" alt="cycle"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Used Bicycle as Transport</h5>
+                        <p class="card-text">Earn points by showing proof of using a bicycle for transport.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Recycled Plastic">
+                    <a href=""><img src="https://i.ibb.co/LC3yssm/plastic.jpg" class="card-img-top category-img" alt="plastic"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Recycled Plastic</h5>
+                        <p class="card-text">Upload proof of recycling plastic to earn points.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Ate Veg Full Day">
+                    <a href=""><img src="https://i.ibb.co/qYMcPsL/veg.jpg" class="card-img-top category-img" alt="veg"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Ate Veg Full Day</h5>
+                        <p class="card-text">Earn points for eating only vegetables for an entire day!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Category Cards -->
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Carpooling">
+                    <a href=""><img src="https://i.ibb.co/6JKjtpy/pool.png" class="card-img-top category-img" alt="pool"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Carpooling</h5>
+                        <p class="card-text">Earn points by carpooling with others instead of driving alone.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Zero Waste Shopping">
+                    <a href=""><img src="https://i.ibb.co/Zxpq60d/zerowaste.jpg" class="card-img-top category-img" alt="zerowaste"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Zero Waste Shopping</h5>
+                        <p class="card-text">Earn points for shopping with zero waste practices.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Planted Tree">
+                    <a href=""><img src="https://i.ibb.co/qjjL51B/tree.jpg" class="card-img-top category-img" alt="tree"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Planted a Tree</h5>
+                        <p class="card-text">Earn points by showing proof of planting a tree.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Switch to LED Bulbs">
+                    <a href=""><img src="https://i.ibb.co/QvTChD4/bulb.jpg" class="card-img-top category-img" alt="bulb"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Switch to LED Bulbs</h5>
+                        <p class="card-text">Earn points for switching your home lighting to energy-efficient LED bulbs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card category-card" data-bs-toggle="modal" data-bs-target="#uploadModal" data-category="Plastic-Free Packaging">
+                    <a href=""><img src="https://i.ibb.co/xJRhgKb/plasticf.jpg" class="card-img-top category-img" alt="plasticf"></a>
+                    <div class="card-body category-card-body">
+                        <h5 class="card-title">Plastic-Free Packaging</h5>
+                        <p class="card-text">Earn points by opting for plastic-free packaging when shopping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Cards can be added here -->
+        </div>
+    </div>
+
+    <!-- Modal for Uploading Proof -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Proof</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modal-category-title">Upload your proof for:</h4>
+                    <input type="file" class="form-control mb-3" id="proofUpload">
+                    <button type="button" class="btn btn-primary">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Update modal title based on selected category
+        const categoryCards = document.querySelectorAll('.category-card');
+        categoryCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const category = this.getAttribute('data-category');
+                document.getElementById('modal-category-title').innerText = `Upload your proof for: ${category}`;
+            });
+        });
+    </script>
+</body>
+
+</html>
