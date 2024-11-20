@@ -1,53 +1,230 @@
-// routes/photoRoutes.js
 const express = require('express');
-const multer = require('multer');
-const AWS = require('aws-sdk');
-const PhotoProof = require('../models/PhotoProof');
-//const auth = require('../routes/auth');
-
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
+const multer = require('multer');
+const path = require('path');
+const authenticateToken = require('../middlewares/auth');
+const axios = require('axios');
+const fs = require('fs');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const s3Client = new S3Client();
+const dotenv = require('dotenv');
+const User = require('../models/User');
 
-const rekognition = new AWS.Rekognition();
+dotenv.config();
+// Define categories and their sub-categories
+const categories = {
+    "recycled plastic": ["recycling symbol", "plastic", "recyclable material", "plastic waste"],
+    "used bicycle": [
+        "pre-owned bicycle",
+        "second-hand bike",
+        "recycled bicycle",
+        "eco-friendly transport",
+        "sustainable cycling",
+        "bike sharing",
+        "refurbished cycle",
+        "green commuting",
+        "low-carbon transport",
+        "bicycle reuse"
+    ],
+    "ate veg full day": [
+        "vegetarian diet",
+        "plant-based meal",
+        "meatless day",
+        "vegan diet",
+        "sustainable eating",
+        "low-carbon food",
+        "ethical eating",
+        "green meals",
+        "meat-free meals",
+        "plant-forward eating"
+    ],
+    "carpooling": [
+        "ride sharing",
+        "shared commute",
+        "car-sharing service",
+        "eco-friendly travel",
+        "reduced emissions",
+        "green transportation",
+        "fuel-saving commute",
+        "low-carbon travel",
+        "group travel",
+        "sustainable transport"
+    ],
+    "zero waste shopping": [
+        "plastic-free shopping",
+        "bulk buying",
+        "reuse containers",
+        "eco-friendly shopping",
+        "sustainable shopping",
+        "minimal waste purchase",
+        "recyclable packaging",
+        "refill station",
+        "waste-free groceries",
+        "low-waste products"
+    ],
+    "planted tree": [
+        "tree plantation",
+        "reforestation",
+        "forest restoration",
+        "tree sapling",
+        "eco-friendly activity",
+        "carbon offset",
+        "environmental conservation",
+        "green initiative",
+        "native tree planting",
+        "afforestation effort"
+    ],
+    "switch to LED bulbs": [
+        "energy-efficient lighting",
+        "LED replacement",
+        "low-energy bulbs",
+        "eco-friendly lights",
+        "sustainable lighting",
+        "green energy saving",
+        "carbon footprint reduction",
+        "long-lasting bulbs",
+        "LED retrofit",
+        "energy-saving solutions"
+    ],
+    "plastic-free packaging": [
+        "biodegradable packaging",
+        "compostable packaging",
+        "recyclable materials",
+        "zero plastic wraps",
+        "eco-friendly packaging",
+        "sustainable packaging",
+        "waste-free packaging",
+        "natural materials",
+        "paper-based packaging",
+        "green product packaging"
+    ],
+};
 
-// Upload photo
-router.post('/upload',upload.single('photo'), async (req, res) => {
-    try {
-        const photo = req.file;
-        const fileContent = require('fs').readFileSync(photo.path);
 
-        const params = {
-            Image: { Bytes: fileContent },
-            MaxLabels: 10,
-            MinConfidence: 80,
-        };
-
-        rekognition.detectLabels(params, async (err, data) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Error recognizing image');
-            }
-
-            const recognizedLabels = data.Labels.map(label => label.Name).join(', ');
-            const newPhotoProof = new PhotoProof({
-                userId: req.user.userId,
-                photoUrl: photo.path,
-                activityRecognized: recognizedLabels,
-                pointsAwarded: 50, // Assume 50 points for each proof
-            });
-
-            await newPhotoProof.save();
-
-            // Update user points
-            const user = await User.findById(req.user.userId);
-            user.points += 50;
-            await user.save();
-
-            res.status(201).json({ message: 'Photo uploaded and points awarded', recognizedLabels });
-        });
-    } catch (err) {
-        res.status(500).send('Error uploading photo');
-    }
+// Set up AWS S3 client
+const s3 = new S3Client({
+  region: 'us-east-1', // replace with your S3 bucket region
 });
+
+const REKOG_API_URL = process.env.awsrec;
+
+// Configure Multer for file upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads'); // Path where the file should be stored
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Filename with timestamp
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Middleware to parse form data (userId, category, etc.) before file upload
+router.use(express.urlencoded({ extended: true })); // Ensure form data is parsed
+router.use(express.json()); // Optional, if you also expect JSON payloads
+
+router.post('/upload', authenticateToken, upload.single('image'), async (req, res) => {
+  if (req.fileValidationError) {
+    console.error('File validation error:', req.fileValidationError);
+    return res.status(400).send('File validation error');
+  }
+  console.log('Request received at /upload');
+
+  const { file, body } = req;
+  const { category } = body; // Extract userId and category from the body
+  const user = await User.findById(req.user.userId);
+  console.log('Category:', category);
+ 
+  
+
+  try {
+    const fileStream = fs.createReadStream(file.path);
+    const bucketName = 'recbuck';
+    const objectKey = file.originalname;
+
+    const uploadParams = {
+      Bucket: bucketName, // replace with your S3 bucket name
+      Key: file.originalname, // unique key for the file in S3
+      Body: fileStream,
+      ContentType: file.mimetype, // optional: set the file's MIME type
+    };
+
+    // Upload file to S3 using PutObjectCommand
+    await s3.send(new PutObjectCommand(uploadParams));
+
+
+    const labels = await analyzeImage(bucketName, objectKey);
+
+    console.log('Labels:', labels);
+    // Ensure labels is an array
+    if (!Array.isArray(labels)) {
+        return res.status(500).json({ message: 'Error: Labels are not an array' });
+      }
+ // Normalize the category input to lowercase
+ const normalizedCategory = category.toLowerCase();
+
+ // Check if any label matches a subcategory of the given category
+const matchedLabel = labels.some(label => {
+    const normalizedLabelName = label.Name.toLowerCase();
+    // Check if the label matches any subcategory of the given category
+    return categories[normalizedCategory]?.includes(normalizedLabelName);
+  });
+
+if (matchedLabel) {
+    // Award points to the user if category matches
+    const user = await User.findById(req.user.userId);
+    user.points += 50; // Add 50 points
+    await user.save();
+
+
+
+    res.json({ message: 'Points awarded successfully!' });
+   
+  } else {
+    // Respond with wrong category message if no match is found
+    res.json({ message: 'Wrong category, no points awarded.' });
+  }
+
+   
+  } catch (error) {
+    console.error('Error processing image:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    // Cleanup local file
+    fs.unlinkSync(file.path);
+  }
+});
+
+
+
+
+
+async function analyzeImage(bucketName, objectKey) {
+  const response = await axios.post(
+    REKOG_API_URL,
+    {
+      imageKey: objectKey,
+      bucketName: bucketName,
+    },
+    // Send input as a JSON object
+    {
+      headers: {
+        'Content-Type': 'application/json', // Set Content-Type to application/json
+        'Accept': 'application/json',
+      },
+    }
+  );
+
+  // Parse Lambda response
+  let suggestions;
+  if (response.data && response.data.body) {
+    const lambdaBody = JSON.parse(response.data.body); // Parse JSON string in `body`
+    suggestions = lambdaBody.Labels || 'Unexpected response format from Lambda.';
+  } else {
+    suggestions = 'Unexpected response format from Lambda.';
+  }
+  return suggestions;
+}
 
 module.exports = router;

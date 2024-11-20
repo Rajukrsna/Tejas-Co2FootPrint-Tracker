@@ -23,7 +23,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <% if(!user){%>
+                   
                     <li class="nav-item">
                         <a class="nav-link" href="/">
                             <i class="fas fa-user-plus"></i> Register
@@ -34,7 +34,7 @@
                             <i class="fas fa-sign-in-alt"></i> Login
                         </a>
                     </li>
-                <%} else {%>
+                
                     <!-- Show these links if the user is logged in -->
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
@@ -56,7 +56,8 @@
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </li>
-                    <%}%>
+                    
+                  
                 </ul>
             </div>
         </div>

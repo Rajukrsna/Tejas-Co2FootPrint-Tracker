@@ -37,10 +37,10 @@ router.post('/register', async (req, res) => {
 });
 
 // GET Login Page
-router.get('/login',authenticateToken, async(req, res) => {
-    const user = await User.findById(req.user.userId);
+router.get('/login', async(req, res) => {
+  
    
-    res.render('login', {user:user}); // Render the login form view
+    res.render('login'); // Render the login form view
 });
 
 // Login Route

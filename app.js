@@ -32,8 +32,7 @@ app.use('/user', require('./routes/user')); // Protect user routes
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/leaderboard', require('./routes/leaderBoard')); // Protect leaderboard routes
 app.use('/activityRoute2',require('./routes/activityRoute2'));
-
-
+app.use('/photoProofRoutes',require('./routes/photoProofRoutes'));
 // Root route
 app.get('/', (req, res) => res.redirect('/user/register'));
 
