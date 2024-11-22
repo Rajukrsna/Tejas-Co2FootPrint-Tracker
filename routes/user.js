@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
         const newUser = new User({ username, email, password: hashedPassword });
         await newUser.save();
 
-        res.redirect('/activityRoute2'); // Redirect to login page after registration
+        res.redirect('login'); // Redirect to login page after registration
     } catch (err) {
         console.error('Error during registration:', err);
         res.status(500).send('Internal Server Error');
@@ -69,7 +69,7 @@ router.post('/login', async (req, res) => {
         });
 
        
-        res.redirect('/dashboard'
+        res.redirect('/activityRoute2'
         );
 
     } catch (err) {

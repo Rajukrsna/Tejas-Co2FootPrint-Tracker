@@ -315,49 +315,54 @@
 </script>
 
 
-    <script>
-         document.addEventListener('DOMContentLoaded', function () {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         async function fetchBreakdown() {
-            const response = await fetch('/activityRoute2/category-breakdown');
-            const data = await response.json();
+            try {
+                const response = await fetch('/activityRoute2/category-breakdown');
+                const data = await response.json();
 
-            // Prepare data for the chart
-            const labels = data.map(item => item._id); // ['emission', 'reduction']
-            const values = data.map(item => item.totalCo2); // Total CO2 values
+                // Prepare data for the chart
+                const labels = data.map(item => item._id); // ['Emission', 'Reduction']
+                const values = data.map(item => item.totalCo2); // Total CO2 values
 
-            // Render chart
-            const ctx = document.getElementById('categoryChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: ['#FF6384', '#36A2EB'], // Colors for categories
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            position: 'top'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (tooltipItem) {
-                                    const value = tooltipItem.raw;
-                                    return `${tooltipItem.label}: ${value.toFixed(2)} kg CO2`;
+                // Render chart
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: ['#FF6384', '#36A2EB'], // Colors for categories
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const value = tooltipItem.raw;
+                                        return `${tooltipItem.label}: ${value.toFixed(2)} kg CO2`;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error('Error fetching breakdown:', error);
+            }
         }
 
         fetchBreakdown();
     });
-    </script>
+</script>
+
 
 <script>
     // Fetch the CO₂ breakdown data from the server

@@ -9,8 +9,10 @@ router.get('/', authenticateToken, async (req, res) => {
         // Fetch user data
       
         const user = await User.findById(req.user.userId);
+ 
          // Fetch activity data
          const activities = await Activity.find({ userId: user._id });
+        
         if (!user) {
             console.warn('User not found');
             return res.status(404).send('User not found');

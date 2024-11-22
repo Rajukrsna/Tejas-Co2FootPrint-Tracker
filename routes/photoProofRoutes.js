@@ -9,6 +9,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const s3Client = new S3Client();
 const dotenv = require('dotenv');
 const User = require('../models/User');
+const Activity = require('../models/Activity');
 
 dotenv.config();
 // Define categories and their sub-categories
@@ -18,6 +19,7 @@ const categories = {
         "pre-owned bicycle",
         "second-hand bike",
         "recycled bicycle",
+        "bicycle",
         "eco-friendly transport",
         "sustainable cycling",
         "bike sharing",
@@ -67,6 +69,9 @@ const categories = {
         "reforestation",
         "forest restoration",
         "tree sapling",
+         "gardening",
+         "garden",
+         "Nature",
         "eco-friendly activity",
         "carbon offset",
         "environmental conservation",
@@ -91,6 +96,11 @@ const categories = {
         "compostable packaging",
         "recyclable materials",
         "zero plastic wraps",
+        "Package Delivery",
+        " Cardboard",
+        "Box",
+        "Disposable Cup",
+        "Carton",
         "eco-friendly packaging",
         "sustainable packaging",
         "waste-free packaging",
@@ -129,12 +139,10 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
     console.error('File validation error:', req.fileValidationError);
     return res.status(400).send('File validation error');
   }
-  console.log('Request received at /upload');
-
+  
   const { file, body } = req;
   const { category } = body; // Extract userId and category from the body
-  const user = await User.findById(req.user.userId);
-  console.log('Category:', category);
+ console.log(category);
  
   
 
@@ -156,28 +164,55 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
 
     const labels = await analyzeImage(bucketName, objectKey);
 
-    console.log('Labels:', labels);
+  console.log(labels);
     // Ensure labels is an array
     if (!Array.isArray(labels)) {
         return res.status(500).json({ message: 'Error: Labels are not an array' });
       }
  // Normalize the category input to lowercase
  const normalizedCategory = category.toLowerCase();
+ if (!categories[normalizedCategory]) {
+  console.error(`Category "${normalizedCategory}" does not exist.`);
+  return res.status(400).json({ message: 'Invalid category provided' });
+}
 
  // Check if any label matches a subcategory of the given category
 const matchedLabel = labels.some(label => {
     const normalizedLabelName = label.Name.toLowerCase();
+    console.log(normalizedLabelName);
+    console.log(categories[normalizedCategory])
     // Check if the label matches any subcategory of the given category
-    return categories[normalizedCategory]?.includes(normalizedLabelName);
+    return categories[normalizedCategory]
+    s?.includes(normalizedLabelName);
   });
 
 if (matchedLabel) {
-    // Award points to the user if category matches
-    const user = await User.findById(req.user.userId);
-    user.points += 50; // Add 50 points
+  
+  const user = await User.findById(req.user.userId);
+    user.points += 5; // Add 50 points
     await user.save();
 
 
+  const activity = await Activity.findOne({ userId: req.user.userId });
+
+  if (activity) {
+      // Increment the reduction value by 50kg of c02 per co2footprint reduction activity(Approx);
+      activity.reduction += 50;
+      await activity.save();
+      console.log("Activity reduction value updated successfully.");
+  } else {
+      // If no activity exists, create a new activity
+      const newActivity = new Activity({
+          userId: req.user.userId,
+          suggestions: "New activity for this user",
+          co2: 0, // Set appropriate co2 value
+          reduction: 100, // Initialize reduction value
+          date: new Date()
+      });
+  
+      await newActivity.save();
+      console.log("New activity created for the user.");
+  }
 
     res.json({ message: 'Points awarded successfully!' });
    
@@ -195,8 +230,6 @@ if (matchedLabel) {
     fs.unlinkSync(file.path);
   }
 });
-
-
 
 
 

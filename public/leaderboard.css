@@ -105,3 +105,123 @@
             margin: 5px;
             animation: confetti 1.5s ease-out infinite;
         }
+
+        /* General Styling */
+        body {
+            background: linear-gradient(135deg, #f7f7f7, #d8d8d8);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .card-container {
+            margin-top: 30px;
+            animation: bounceInUp 1s ease;
+        }
+
+        /* Card Header Styling */
+        .card-header {
+            background: #ff7f50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* Card Body Styling */
+        .card-body {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Image for Card Header */
+        .card-header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            opacity: 0.8;
+            transition: transform 0.3s ease;
+        }
+
+        .card-header img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Modal Styling */
+        .modal-body {
+            text-align: center;
+        }
+
+        .modal-body input {
+            margin-bottom: 15px;
+        }
+
+        .modal-header {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* Result Card Styling */
+        .result-card {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .result-card h5 {
+            color: #4CAF50;
+        }
+
+        .result-card p {
+            color: #333;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .confetti span {
+            display: block;
+            width: 10px;
+            height: 10px;
+            margin: 2px;
+            background-color: #f0f0f0;
+            animation: confetti 1.5s infinite;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100px) rotate(45deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(100px) rotate(45deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceInUp {
+            0% {
+                transform: translateY(1000px);
+            }
+
+            60% {
+                transform: translateY(-30px);
+            }
+
+            80% {
+                transform: translateY(10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }

@@ -33,6 +33,8 @@ app.use('/dashboard', require('./routes/dashboard'));
 app.use('/leaderboard', require('./routes/leaderBoard')); // Protect leaderboard routes
 app.use('/activityRoute2',require('./routes/activityRoute2'));
 app.use('/photoProofRoutes',require('./routes/photoProofRoutes'));
+app.use('/chat', require('./routes/chat'));
+app.use('/wasteDedect', require('./routes/wasteDedect'))
 // Root route
 app.get('/', (req, res) => res.redirect('/user/register'));
 

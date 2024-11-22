@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const axios = require('axios');
 const mongoose = require('mongoose');
 const Daily = require('../models/daily');
+const User = require('../models/User');
 
 dotenv.config();
 const LAMBDA_API_URL =process.env.URILAMA;
@@ -43,8 +44,10 @@ router.post('/log',authenticateToken, async (req, res) => {
    let co2_recycling = emissionFactors2[recycling] === 'always' ? 0.1 : (emissionFactors2[recycling] === 'sometimes' ? 0.2 : 0.3);  // Example values
    let co2_travel = emissionFactors2.flights * travel; // Assume average flight hours per trip
 
+   const user = await User.findById(req.user.userId);
+
    const dailyact = new Daily({
-    userId,
+    userId:user._id,
     transportation,
     energy,
     diet,
@@ -115,7 +118,7 @@ router.post('/log',authenticateToken, async (req, res) => {
     
         // Save activity to database
         const newActivity = new Activity({
-          userId,
+          userId:user._id,
           suggestions:suggestions,
           co2: co2Emitted - co2Reduced, // Positive for net emission
           reduction:0,
@@ -126,7 +129,7 @@ router.post('/log',authenticateToken, async (req, res) => {
 
      
     
-  res.redirect('/user/login');
+  res.redirect('/dashboard');
       
     } catch (err) {
         res.status(500).send('Error generating suggestions');
@@ -140,17 +143,24 @@ router.get('/category-breakdown', authenticateToken, async (req, res) => {
 
     try {
         const breakdown = await Activity.aggregate([
-            { $match: { userId:  new  mongoose.Types.ObjectId(userId) } }, // Filter by user
+            { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Filter by user
             {
                 $group: {
-                    _id: '$type', // Group by activity type ('emission' or 'reduction')
-                    totalCo2: { $sum: '$co2' } // Sum CO2 for each type
+                    _id: null, // No need to group by type, but keep both values
+                    totalEmission: { $sum: '$co2' }, // Sum total CO2 emissions
+                    totalReduction: { $sum: '$reduction' } // Sum total CO2 reductions
                 }
             }
         ]);
-        
 
-        res.json(breakdown); // Send data to the frontend
+        // Prepare data in the format required for the chart
+        const response = [
+            { _id: 'Emission', totalCo2: breakdown[0]?.totalEmission || 0 },
+            { _id: 'Reduction', totalCo2: breakdown[0]?.totalReduction || 0 }
+        ];
+
+        res.json(response);
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching category breakdown');
