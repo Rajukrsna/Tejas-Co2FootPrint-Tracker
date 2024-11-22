@@ -87,9 +87,10 @@ const analyzeImageWithAI = async (imageBase64) => {
     const data = {
         model: "Llama-3.2-90B-Vision-Instruct",
         messages: [
+            { role: "user", content: `1. What type of waste do you see in the image?The possible types of waste are plastic, glass, paper, rubber ` },
+            { role: "user", content: "2. What is the estimated CO2 footprint (in kg) for that object that you saw?" },
             { role: "user", content: `data:image/jpeg;base64,${imageBase64}` },
-            { role: "user", content: `1. What do you see in the image? ` },
-            { role: "user", content: "2. What is the estimated CO2 footprint (in kg) for that object that you saw?" }
+           
         ],
         temperature: 0.1,
         top_p: 0.1,

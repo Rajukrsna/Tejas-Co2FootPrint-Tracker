@@ -14,7 +14,7 @@ const Activity = require('../models/Activity');
 dotenv.config();
 // Define categories and their sub-categories
 const categories = {
-    "recycled plastic": ["recycling symbol", "plastic", "recyclable material", "plastic waste"],
+    "recycled plastic": ["recycling symbol", "plastic", "recyclable material", "plastic waste","tub","tin"],
     "used bicycle": [
         "pre-owned bicycle",
         "second-hand bike",
@@ -97,10 +97,10 @@ const categories = {
         "recyclable materials",
         "zero plastic wraps",
         "Package Delivery",
-        " Cardboard",
-        "Box",
-        "Disposable Cup",
-        "Carton",
+        " cardboard",
+        "box",
+        "disposable Cup",
+        "carton",
         "eco-friendly packaging",
         "sustainable packaging",
         "waste-free packaging",
@@ -182,9 +182,7 @@ const matchedLabel = labels.some(label => {
     console.log(normalizedLabelName);
     console.log(categories[normalizedCategory])
     // Check if the label matches any subcategory of the given category
-    return categories[normalizedCategory]
-    s?.includes(normalizedLabelName);
-  });
+    return categories[normalizedCategory]?.includes(normalizedLabelName);  });
 
 if (matchedLabel) {
   
