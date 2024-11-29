@@ -1,21 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const emissionFactors = {
-    car_petrol: 2.4, // kg CO₂ per km
-    car_diesel: 2.6,
-    public_transport: 0.3,
-    bicycle: 0,
-    walk: 0,
-    electric_vehicle: 0.5,
-    renewable: 0,
-    nonrenewable: 0.7, // kg CO₂ per kWh
-    non_vegetarian: 4.7, // kg CO₂ per meal
-    balanced: 2.5,
-    vegetarian: 1.5,
-    vegan: 1.0,
-    flights: 90 // kg CO₂ per flight hour
-};
+
 
 const dailySchema = new mongoose.Schema({
     userId: {

@@ -202,4 +202,9 @@ router.get('/activity-breakdown', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Error fetching data.', error });
     }
 });
+
+
+
+
+
 module.exports = router;

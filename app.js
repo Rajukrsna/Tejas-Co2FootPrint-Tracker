@@ -13,7 +13,9 @@ dotenv.config();
 // Log JWT_SECRET to verify it is set correctly
 //console.log(`JWT_SECRET: ${process.env.JWT_SECRET}`); 
 app.use('/public', express.static(path.join(__dirname, 'public')));
-// Middleware
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Middlewar
 app.use(expressLayouts);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +36,7 @@ app.use('/leaderboard', require('./routes/leaderBoard')); // Protect leaderboard
 app.use('/activityRoute2',require('./routes/activityRoute2'));
 app.use('/photoProofRoutes',require('./routes/photoProofRoutes'));
 app.use('/chat', require('./routes/chat'));
-app.use('/wasteDedect', require('./routes/wasteDedect'))
+
 // Root route
 app.get('/', (req, res) => res.redirect('/user/register'));
 

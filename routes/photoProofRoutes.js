@@ -10,7 +10,7 @@ const s3Client = new S3Client();
 const dotenv = require('dotenv');
 const User = require('../models/User');
 const Activity = require('../models/Activity');
-
+const Transaction=require('../models/Transactions')
 dotenv.config();
 // Define categories and their sub-categories
 const categories = {
@@ -113,7 +113,12 @@ const categories = {
 
 // Set up AWS S3 client
 const s3 = new S3Client({
-  region: 'us-east-1', // replace with your S3 bucket region
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  }
+  // replace with your S3 bucket region
 });
 
 const REKOG_API_URL = process.env.awsrec;
@@ -190,6 +195,13 @@ if (matchedLabel) {
     user.points += 5; // Add 50 points
     await user.save();
 
+ // Create a transaction record
+ const transaction = new Transaction({
+  username: user.username,
+  pointsAwarded: 5,
+});
+await transaction.save();
+
 
   const activity = await Activity.findOne({ userId: req.user.userId });
 
@@ -257,5 +269,19 @@ async function analyzeImage(bucketName, objectKey) {
   }
   return suggestions;
 }
+
+// Get recent transactions
+router.get('/transactions', async (req, res) => {
+  try {
+      const recentTransactions = await Transaction.find({})
+          .sort({ timestamp: -1 }) // Sort by newest first
+          .limit(10); // Fetch the latest 10 transactions
+      res.json(recentTransactions);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching transactions' });
+  }
+});
+
 
 module.exports = router;
