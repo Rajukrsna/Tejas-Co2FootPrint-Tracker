@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser');
 const authenticateToken = require('./middlewares/auth'); // Updated the path to match middleware usage
 const expressLayouts = require('express-ejs-layouts');
 
+//const passport = require('passport');
+//require('./middlewares/passport'); // Make sure this path is correct and loaded early
+//const session = require('express-session');
 // Load environment variables
 dotenv.config();
 
@@ -20,6 +23,17 @@ app.use(expressLayouts);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Parse cookies before using them
+
+//app.use(session({
+   // secret: process.env.SESSION_SECRET,
+   // resave: false,
+   // saveUninitialized: false
+//}));
+
+//app.use(passport.initialize());
+//app.use(passport.session());
+
+
 
 app.set('view engine', 'ejs');
 app.set('layout', 'layout'); 
@@ -36,6 +50,7 @@ app.use('/leaderboard', require('./routes/leaderBoard')); // Protect leaderboard
 app.use('/activityRoute2',require('./routes/activityRoute2'));
 app.use('/photoProofRoutes',require('./routes/photoProofRoutes'));
 app.use('/chat', require('./routes/chat'));
+app.use('/calculate', require('./routes/calculate'));
 
 // Root route
 app.get('/', (req, res) => res.redirect('/user/register'));

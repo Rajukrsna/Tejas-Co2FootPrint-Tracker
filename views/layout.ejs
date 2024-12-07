@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="https://i.ibb.co/P450Bzb/download.png" alt="logo"> Tejas Footprint-CO2 Tracker
+                <img src="https://i.ibb.co/P450Bzb/download.png" alt="logo"> Tejas3.o 
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,16 +29,17 @@
                             <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/login">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                    </li>
-                
+                 
                     <!-- Show these links if the user is logged in -->
+
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/calculate">
+                            <i class="fas fa-tachometer-alt"></i> Calculator
                         </a>
                     </li>
                     <li class="nav-item">
@@ -53,7 +54,7 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="/user/login">
+                        <a class="nav-link" href="/user/logout">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </li>
@@ -66,7 +67,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container">
+    <div >
         <%- body %>
     </div>
 

@@ -47,6 +47,72 @@
     transform: translateY(20px); /* Start with offset */
     animation: fadeIn 0.5s forwards; /* Smooth fade-in animation */
 }
+/* Badge Section Styling */
+.badge-section {
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* Badge Heading */
+.badge-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.badge-subheading {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Badge Container */
+.badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Badge Styling */
+.badge {
+    text-align: center;
+    opacity: 0.5; /* Disabled badges */
+    transition: transform 0.3s, opacity 0.3s;
+    width: 80px;
+    cursor: pointer;
+}
+
+.badge.enabled {
+    opacity: 1; /* Fully visible for enabled badges */
+    transform: scale(1.1); /* Slight zoom for unlocked badges */
+}
+
+.badge img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.badge img:hover {
+    transform: scale(1.2); /* Zoom on hover */
+}
+
+.badge p {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+}
 
 .transaction-card .card-body {
     display: flex;
@@ -89,7 +155,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div >
         <h1 class="text-center mt-4">Leaderboard</h1>
 
         <!-- Confetti Animation for Top Rank -->
@@ -107,7 +173,8 @@
                     <th>Rank</th>
                     <th>Username</th>
                     <th>Points</th>
-                    <th>Progress</th>
+                    <th>Contest Rank</th>
+                    <th>Badge</th>
                 </tr>
             </thead>
             <tbody>
@@ -121,21 +188,95 @@
                         <td><%= use.username %></td>
                         <td><%= use.points %></td>
                         <td>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" style="width: <%= use.points %>%; background-color: <%= use.points > 100 ? '#4CAF50' : use.points > 50 ? '#FFC107' : '#F44336' %>;"></div>
-                            </div>
+                           0
                         </td>
+                        
+                            <td>
+                                <div class="badge-container">
+                                    <% if (use.earned_badges && use.earned_badges.length > 0) { %>
+                                        <% use.earned_badges.forEach(badge => { %>
+                                            <div class="badge">
+                                                <img src="<%= badge.imageUrl %>"  alt="<%= badge.name %>" title="<%= badge.name %>">
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <p>No badges earned yet</p>
+                                    <% } %>
+                                </div>
+                            </td>
+
+                        
                     </tr>
                 <% }) %>
             </tbody>
         </table>
 
-        <div class="transactions-container">
+        <div class="row mt-4">
+        <div class="col-md-4">
+        <div>
             <h3 class="transactions-heading">Recent Transactions</h3>
             <div id="transactionContainer" class="transaction-scroll-container">
                 <!-- Transaction cards will be dynamically added here -->
             </div>
         </div>
+</div>
+<div class="col-md-4">
+    <div class="badge-section">
+        <h2 class="badge-heading">🏆 Achieved Badges</h2>
+        <p class="badge-subheading">Collect badges as you earn more points and unlock achievements!</p>
+    
+        <div class="badge-container">
+            <!-- Example Badge -->
+            <div class="badge enabled">
+                <img src="public/Badge1.png" alt="Bronze Badge" />
+                <p>Bronze</p>
+            </div>
+            <div class="badge disabled">
+                <img src="public/Badge2.png" alt="Silver Badge" />
+                <p>Silver</p>
+            </div>
+            <div class="badge disabled">
+                <img src="public/Badge3.png" alt="Gold Badge" />
+                <p>Gold</p>
+            </div>
+            <div class="badge disabled">
+                <img src="public/Badge4.png" alt="Gold Badge" />
+                <p>Diamond</p>
+            </div>
+            <div class="badge disabled">
+                <img src="public/Badge5.png" alt="Gold Badge" />
+                <p>Ruby</p>
+            </div>
+            <div class="badge disabled">
+                <img src="public/Badge6.png" alt="Gold Badge" />
+                <p>Crystal</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+
+        <h1> Redeem points</h1>
+        for 10 points, get tree
+        for 20 points , get bus
+        for 30 points, get car
+        for 40 points get bicycle
+        for 50 points 
+        </div>
+
+
+
+
+
+
+
+    </div>
+    
+    
+
+
+
         <script>
             
             let transactionCount = 0;
@@ -191,6 +332,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/leaderboard/dashboard')
+        .then(response => response.json())
+        .then(userData => {
+            const badges = document.querySelectorAll('.badge');
+            badges.forEach(badge => {
+                const badgeNameElement = badge.querySelector('p');
+                if (!badgeNameElement) {
+                    console.error('Badge missing <p> element:', badge);
+                    return;
+                }
+                const badgeName = badgeNameElement.textContent.trim();
+                const isBadgeEarned = userData.earned_badges.some(badgeObj => badgeObj.name === badgeName);
+                if (isBadgeEarned) {
+                    badge.classList.add('enabled');
+                    badge.classList.remove('disabled');
+                } else {
+                    badge.classList.add('disabled');
+                    badge.classList.remove('enabled');
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching leaderboard data:', error);
+        });
+});
+
+</script>
+
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>

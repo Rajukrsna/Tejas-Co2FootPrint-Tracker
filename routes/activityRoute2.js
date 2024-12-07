@@ -11,7 +11,7 @@ const User = require('../models/User');
 dotenv.config();
 const LAMBDA_API_URL =process.env.URILAMA;
 
-router.get('/',authenticateToken ,(req,res)=>
+router.get('/' ,(req,res)=>
 {
     res.render('logactivity2');
 
@@ -19,47 +19,7 @@ router.get('/',authenticateToken ,(req,res)=>
 
 router.post('/log',authenticateToken, async (req, res) => {
   const userInput = req.body; // Collect input from the user
-    let suggestions = '';
-    const userId = req.user.userId;
-    const { transportation, energy, diet, recycling, travel } = req.body;
-    const emissionFactors2 = {
-        car_petrol: 2.4, // kg CO₂ per km
-        car_diesel: 2.6,
-        public_transport: 0.3,
-        bicycle: 0,
-        walk: 0,
-        electric_vehicle: 0.5,
-        renewable: 0,
-        nonrenewable: 0.7, // kg CO₂ per kWh
-        non_vegetarian: 4.7, // kg CO₂ per meal
-        balanced: 2.5,
-        vegetarian: 1.5,
-        vegan: 1.0,
-        flights: 90 // kg CO₂ per flight hour
-    };
-   // Calculate CO₂ emissions for each category
-   let co2_transportation = emissionFactors2[transportation]* 20 || 0;
-   let co2_energy = emissionFactors2[energy]*30 || 0;
-   let co2_diet = emissionFactors2[diet] *60 || 0;
-   let co2_recycling = emissionFactors2[recycling] === 'always' ? 0.1 : (emissionFactors2[recycling] === 'sometimes' ? 0.2 : 0.3);  // Example values
-   let co2_travel = emissionFactors2.flights * travel; // Assume average flight hours per trip
-
-   const user = await User.findById(req.user.userId);
-
-   const dailyact = new Daily({
-    userId:user._id,
-    transportation,
-    energy,
-    diet,
-    recycling,
-    travel,
-    co2_transportation,
-    co2_energy,
-    co2_diet,
-    co2_recycling,
-    co2_travel
-});
-    await dailyact.save()
+  console.log(userInput)
     try {
       //call the AI model for the response
       const response = await axios.post(
@@ -85,43 +45,17 @@ router.post('/log',authenticateToken, async (req, res) => {
         suggestions = 'Unexpected response format from Lambda.';
     }
 
-    const emissionFactors = {
-      car: 2.4, // kg CO₂ per km
-      public_transport: 0.3,
-      bicycle: 0,
-      walking: 0,
-      electric_vehicle: 0.5,
-      diet: {
-          non_vegetarian: 4.7, // kg CO₂ per meal
-          balanced: 2.5,
-          vegetarian: 1.5,
-          vegan: 1.0
-      },
-      flights: 90 // kg CO₂ per flight hour
-  };
-
-  // Calculate CO₂ emissions
-  let co2Emitted = 0;
-  if (transportation === 'car_petrol') co2Emitted += emissionFactors.car * 20; // Assume 20 km/day
-  if (transportation === 'public_transport') co2Emitted += emissionFactors.public_transport * 20;
-  if (transportation === 'electric_vehicle') co2Emitted += emissionFactors.electric_vehicle * 20;
-
-  co2Emitted += emissionFactors.diet[diet] * 90; // Assume 90 meals/month
-  co2Emitted += travel * emissionFactors.flights;
-
-  // Reduction examples
-  let co2Reduced = 0;
-  if (transportation === 'bicycle' || transportation === 'walking') {
-      co2Reduced += 2; // Assume 2 kg reduction/day
-  }
-
+    const userId = req.user.userId;
     
         // Save activity to database
         const newActivity = new Activity({
-          userId:user._id,
+          userId:userId,
           suggestions:suggestions,
-          co2: co2Emitted - co2Reduced, // Positive for net emission
+          co2:0,
           reduction:0,
+        
+       // Positive for net emission
+         
           date: new Date()
       });
 
@@ -130,7 +64,7 @@ router.post('/log',authenticateToken, async (req, res) => {
      
     
   res.redirect('/dashboard');
-      
+      console.log("db valuses asaved")
     } catch (err) {
         res.status(500).send('Error generating suggestions');
     }
