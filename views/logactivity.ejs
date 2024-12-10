@@ -111,10 +111,15 @@
                 <div class="modal-body">
                     <h4 id="modal-category-title">Upload your proof for:</h4>
                     <!-- Form for uploading image -->
+                    <div id="previewContainer" class="text-center mt-3">
+                        <!-- Image or PDF preview will be shown here -->
+                      </div>
                     <form id="uploadForm" action="/photoProofRoutes/upload" method="POST" enctype="multipart/form-data">
                         <input type="file" class="form-control mb-3" name="image" required>
                         <!-- Hidden input for category -->
                         <input type="hidden" name="category" id="categoryInput">
+                        <input type="hidden" name="val" value="false">
+
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </form>
                 </div>
@@ -141,7 +146,7 @@
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault(); // Prevent form submission
             const formData = new FormData(e.target);
-
+console.log(formData)
             try {
                 const response = await fetch('/photoProofRoutes/upload', {
                     method: 'POST',
@@ -179,6 +184,37 @@ console.log(result);
             }
         });
     </script>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('change', function (event) {
+          const file = event.target.files[0];
+          const previewContainer = document.getElementById('previewContainer');
+          previewContainer.innerHTML = ''; // Clear previous preview
+      
+          if (file) {
+            if (file.type.startsWith('image/')) {
+              // Preview for images
+              const img = document.createElement('img');
+              img.src = URL.createObjectURL(file);
+              img.style.maxWidth = '100%';
+              img.style.maxHeight = '400px';
+              img.classList.add('mt-2');
+              previewContainer.appendChild(img);
+            } else if (file.type === 'application/pdf') {
+              // Preview for PDFs
+              const embed = document.createElement('embed');
+              embed.src = URL.createObjectURL(file);
+              embed.type = 'application/pdf';
+              embed.width = '100%';
+              embed.height = '400px';
+              embed.classList.add('mt-2');
+              previewContainer.appendChild(embed);
+            } else {
+              previewContainer.innerHTML = '<p class="text-danger">Unsupported file type.</p>';
+            }
+          }
+        });
+      </script>
 </body>
 
 </html>

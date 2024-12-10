@@ -23,8 +23,6 @@ const badgeThresholds = [
 
 
 
-
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./uploads"); // Folder where files will be stored
@@ -121,10 +119,12 @@ const analyzeImageWithAI = async (imageUrl) => {
 
 
 router.get('/', authenticateToken, async (req, res) => {
+ 
     try {
+
         // Fetch user data
         const user = await User.findById(req.user.userId);
-
+//console.log(user);
         // Fetch activity data
         const activities = await Activity.find({ userId: user._id });
 

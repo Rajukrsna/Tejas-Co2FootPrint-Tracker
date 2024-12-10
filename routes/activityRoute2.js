@@ -77,7 +77,7 @@ router.get('/category-breakdown', authenticateToken, async (req, res) => {
 
     try {
         const breakdown = await Activity.aggregate([
-            { $match: { userId: new mongoose.Types.ObjectId(userId) } }, // Filter by user
+            { $match: { userId: userId } }, // Filter by user
             {
                 $group: {
                     _id: null, // No need to group by type, but keep both values
@@ -107,7 +107,7 @@ router.get('/activity-breakdown', authenticateToken, async (req, res) => {
     try {
         // Fetch CO₂ breakdown data by category for the user
         const breakdown = await Daily.aggregate([
-            { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+            { $match: { userId: userId } },
             {
                 $project: {
                     _id: 0,

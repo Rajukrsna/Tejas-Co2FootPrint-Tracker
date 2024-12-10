@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const photoProofSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: String , ref: 'User', required: true },
     photoUrl: { type: String, required: true },
     activityRecognized: { type: String },
     pointsAwarded: { type: Number, default: 0 },

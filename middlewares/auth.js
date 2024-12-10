@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken');
 
 
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies.authToken; // Extract token from cookies
+    const token = req.cookies.authToken; // Extract token from cookiesa
+   // console.log("token:", token)
     // Debugging line
     if (!token) {
-        return res.redirect('/user/login'); // Redirect to login if no token is found
+        return res.redirect('/login'); // Redirect to login if no token is found
     }
 
     try {

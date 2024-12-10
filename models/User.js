@@ -6,11 +6,15 @@ const earnedBadgeSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
+    _id: { type: String, required: true }, // Use a string to store the UUID
+
     username: { type: String, required: true, unique: true },
+
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    
     points: { type: Number, default: 0 },
-    googleId: String,
+    multiplier:{type:Number, default:1},
+    contestPoints:{type:Number, default:0},
     earned_badges: { type: [earnedBadgeSchema], default: [] }
 });
 

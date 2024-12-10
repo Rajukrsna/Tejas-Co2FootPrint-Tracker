@@ -10,7 +10,7 @@ router.get('/', authenticateToken ,async (req, res) => {
      
         const users = await User.find().sort({ points: -1 }).limit(10)
         const user = await User.findById(req.user.userId);
-        console.log(JSON.stringify(users, null, 2));
+        //console.log(JSON.stringify(users, null, 2));
       
        
 

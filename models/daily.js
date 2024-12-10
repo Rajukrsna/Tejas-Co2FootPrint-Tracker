@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const dailySchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },

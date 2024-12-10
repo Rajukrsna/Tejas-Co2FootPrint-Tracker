@@ -146,8 +146,9 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
   }
   
   const { file, body } = req;
-  const { category } = body; // Extract userId and category from the body
- console.log(category);
+  const { category } = body;
+  const{val} =req.body// Extracting the val =false
+ 
  
   
 
@@ -169,8 +170,7 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
 
     const labels = await analyzeImage(bucketName, objectKey);
 
-  console.log(labels);
-    // Ensure labels is an array
+
     if (!Array.isArray(labels)) {
         return res.status(500).json({ message: 'Error: Labels are not an array' });
       }
@@ -184,15 +184,17 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
  // Check if any label matches a subcategory of the given category
 const matchedLabel = labels.some(label => {
     const normalizedLabelName = label.Name.toLowerCase();
-    console.log(normalizedLabelName);
-    console.log(categories[normalizedCategory])
+
     // Check if the label matches any subcategory of the given category
     return categories[normalizedCategory]?.includes(normalizedLabelName);  });
 
 if (matchedLabel) {
   
   const user = await User.findById(req.user.userId);
-    user.points += 5; // Add 50 points
+  if( val=== "true")
+    user.contestPoints += 5;
+  else
+    user.points =user.points+ 5*user.multiplier; // Add 50 points
     await user.save();
 
  // Create a transaction record
@@ -224,7 +226,7 @@ await transaction.save();
       console.log("New activity created for the user.");
   }
 
-    res.json({ message: 'Points awarded successfully!' });
+  res.status(200).json({ message: 'Points awarded successfully!' });
    
   } else {
     // Respond with wrong category message if no match is found
@@ -281,6 +283,28 @@ router.get('/transactions', async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Error fetching transactions' });
   }
+});
+
+router.get('/images/:id', (req, res) => {
+
+  const imageDirectory = './uploads';
+  fs.readdir(imageDirectory, (err, files) => {
+      if (err) {
+          return res.status(500).json({ status: 'error', message: 'Unable to read the image directory.' });
+      }
+
+      // Filter out non-image files (optional)
+      const imageFiles = files.filter(file => /\.(jpg|jpeg|png|gif|bmp)$/i.test(file));
+
+      // Prepare the full image URLs (assuming images are stored in 'uploads')
+      const imageUrls = imageFiles.map(file => `/uploads/${file}`);
+
+      // Respond with image URLs
+      res.json({
+          status: 'success',
+          images: imageUrls
+      });
+  });
 });
 
 

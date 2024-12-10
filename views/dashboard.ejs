@@ -170,29 +170,26 @@
         <div class="row mt-4">
             <!-- Points Section -->
       
-<div class="col-md-4">
-    <div class="points-card" style="background: linear-gradient(135deg, #3b8d99, #6a11cb); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Points</h3>
-        
-        <!-- Icon Section -->
-         
-        <div style="text-align: center; margin-bottom: 20px;">
-            <a href="https://imgbb.com/"><img src="https://i.ibb.co/s56NLRW/download.jpg" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)" alt="download" border="0"></a>
-
-        </div>
-        
-        <!-- Points Data -->
-        <div style="font-size: 2em; color: white; font-weight: bold; margin-bottom: 20px; text-align: center;">
-            <p class="display-6" style="color: black;"><%= points %></p>
-        </div>
-
-        <!-- Points Progress Bar (Optional) -->
-        <div style="width: 100%; height: 15px; background-color: #f1f1f1; border-radius: 10px; overflow: hidden;">
-            <div style="width: <%= points %>%; height: 100%; background-color: #ffb84d;"></div>
-        </div>
-        <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your current points</p>
-    </div>
-</div>
+            <div class="col-md-4">
+                <div class="points-card" style="background: linear-gradient(135deg, #3b8d99, #6a11cb); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Points</h3>
+                    
+                    <!-- Points Data -->
+                    <div style="font-size: 2em; color: white; font-weight: bold; margin-bottom: 20px; text-align: center;">
+                        <p class="display-6" style="color: black;"><%= points %></p>
+                    </div>
+            
+                    <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your current points</p>
+                    
+                    <!-- Redeem Points Button -->
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button style="background-color: #ff9800; color: white; padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);">
+                        <a href="/badgesRedeem" >  Redeem Points</a> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
 
             <div class="col-md-4">
                 <div class="card">
@@ -224,39 +221,7 @@
         <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your contribution to the total CO₂ footprint amoung the users</p>
     </div>
 </div>
-            <!-- Your Emission Level Section -->
-<div class="col-md-4">
-    <div class="emission-card" style="background: linear-gradient(135deg, #ff6a00, #ff8e00); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Emission Level</h3>
-        
-        <!-- Icon Section -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <a href="https://imgbb.com/"><img src="https://i.ibb.co/KNcvGkJ/print2.webp"  style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)". alt="print2" ></a>
-            
-        </div>
-        
-        <!-- Progress Bar -->
-        <div class="progress" style="height: 30px; margin-bottom: 15px;">
-            <div 
-                class="progress-bar" 
-                role="progressbar" 
-                style="width: <%= co2Percentage %>%; background-color: #f44336;" 
-                aria-valuenow="<%= co2Percentage %>" 
-                aria-valuemin="0" 
-                aria-valuemax="100">
-            </div>
-        </div>
-
-        <!-- Emission Data -->
-        <div style="font-size: 1.1em; color: white; font-weight: bold; text-align: center; margin-bottom: 15px;">
-            <p style="color: black;">You've emitted <%= co2Emitted %> kg of CO₂ out of your maximum allowed <%= maxCo2Footprint %> kg.</p>
-        </div>
-        
-        <!-- Emission Status -->
-        <p style="text-align: center; color: white; font-size: 0.9em;">Based on your current emission level, <%= co2Percentage %>% of your limit has been used.</p>
-    </div>
-</div>
-
+           
 
             <div class="col-md-4">
               
@@ -267,74 +232,37 @@
      
    </div>
 </div>
+  <!-- Suggestions Section -->
+  <div class="col-md-8">
+    <div class="suggestions-card">
+        <h3>Suggestions</h3>
+        <ul>
+            <% if (typeof suggestions !== 'undefined' && suggestions && suggestions.length > 0) { %>
+                <% suggestions.forEach((suggestion, index) => { %>
+                    <li>
+                        <strong>Suggestion <%= index + 1 %>:</strong> <%= suggestion %>
+                    </li>
+                <% }) %>
+            <% } else { %>
+                <li>No suggestions available at the moment.</li>
+            <% } %>
+        </ul>
 
 
+            <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#activityModal">
+               Get Suggestion From AI
+            </button>
 
-            <!-- Suggestions Section -->
-            <div class="col-md-4">
-                <div class="suggestions-card">
-                    <h3>Suggestions</h3>
-                    <ul>
-                        <% if (typeof suggestions !== 'undefined' && suggestions && suggestions.length > 0) { %>
-                            <% suggestions.forEach((suggestion, index) => { %>
-                                <li>
-                                    <strong>Suggestion <%= index + 1 %>:</strong> <%= suggestion %>
-                                </li>
-                            <% }) %>
-                        <% } else { %>
-                            <li>No suggestions available at the moment.</li>
-                        <% } %>
-                    </ul>
+    </div>
+</div>
 
 
-                        <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#activityModal">
-                           Get Suggestion From AI
-                        </button>
-           
-                </div>
-            </div>
+          
         </div>
+        
     </div>
            
-    <div class="dashboard-wrapper container mt-4">
-            <div class="card" style="max-width: 900px; margin: 20px auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 12px;">
-                <!-- Card Header -->
-                <div class="card-header text-center" style="background-color: #f8f9fa; border-bottom: 1px solid #ddd; padding: 15px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-                    <h4 style="margin: 0;">Upload and Analyze CO2 Emission</h4>
-                </div>
-            
-                <!-- Card Body -->
-                <div class="card-body" style="padding: 20px;">
-                    <div class="row">
-                
-                        <div class="col-md-6">
-                           
-                            <!-- Uploaded Image Preview -->
-                            <div class="uploaded-image-preview" style="text-align: center; margin-bottom: 15px;">
-                                <h5>Upload A Image to Analyse the CO2 footprint Of it</h5>
-                                <img id="uploadedImage" 
-                                     src="#" 
-                                     alt="Uploaded Image Preview" 
-                                     class="img-fluid" 
-                                     style="max-height: 250px; border-radius: 8px; display: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" />
-                            </div>
-            
-                            <!-- Upload Form -->
-                            <form id="uploadForm" action="/dashboard/waste" method="POST" enctype="multipart/form-data">
-                                <input type="file" id="imageInput" class="form-control mb-3" name="image" required accept="image/*" onchange="previewImage(event)">
-                                <button type="submit" id="submitButton" class="btn btn-primary w-100">Upload Image</button>
-                            </form>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="result-card" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 15px;">
-                                <h5 class="result-heading text-center" style="margin-bottom: 10px;">CO2 Emission Analysis</h5>
-                                <p id="suggestion" class="result-suggestion text-center" style="font-size: 16px; font-weight: bold;">Awaiting analysis...</p>
-                            </div>
-            
-                        </div>
-                    </div>
-              </div>
-
+    
 
 
     <!-- Modal -->
@@ -406,28 +334,6 @@
             </div>
         </div>
     </div>
-
-            
-            <!-- JavaScript to Handle Image Preview -->
-            <script>
-                function previewImage(event) {
-                    const file = event.target.files[0];
-                    const reader = new FileReader();
-                    const uploadedImage = document.getElementById('uploadedImage');
-            
-                    reader.onload = function (e) {
-                        uploadedImage.src = e.target.result; // Set the preview image source
-                        uploadedImage.style.display = 'block'; // Make the image visible
-                    };
-            
-                    if (file) {
-                        reader.readAsDataURL(file); // Convert file to data URL
-                    }
-                }
-            </script>
-            
-
-
         </div>
     </div>
     
@@ -529,39 +435,6 @@
     });
 </script>
 
-
-<script>
-     document.addEventListener('DOMContentLoaded', function () {
-        const submitButton = document.getElementById('submitButton');
-        const uploadForm = document.getElementById('uploadForm');
-        const resultSuggestion = document.getElementById('suggestion');
-
-        submitButton.addEventListener('click', async function (event) {
-            event.preventDefault(); // Prevent default form submission
-
-            const formData = new FormData(uploadForm);
-
-            try {
-                const response = await fetch('/dashboard/waste', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    // Update the result card with data
-                    console.log(data)
-                    resultSuggestion.textContent = data.wasteType|| "No analysis available.";
-                } else {
-                    resultSuggestion.textContent = "Error analyzing CO2 footprint.";
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                resultSuggestion.textContent = "Something went wrong. Please try again.";
-            }
-        });
-    });
- </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
