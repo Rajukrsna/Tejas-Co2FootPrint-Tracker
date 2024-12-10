@@ -188,7 +188,7 @@ app.get('/logout', (req, res) => {
     req.session.destroy();
 // Clear cookies if you're using authentication tokens in cookies
 res.clearCookie('authToken');
-        const logoutUrl = `https://us-east-1he7ntouvo.auth.us-east-1.amazoncognito.com/logout?client_id=70ibnsqdu15kbhcksmjg64n94d&logout_uri=http://localhost:3000/login`;
+        const logoutUrl = `https://us-east-1he7ntouvo.auth.us-east-1.amazoncognito.com/logout?client_id=70ibnsqdu15kbhcksmjg64n94d&logout_uri=${process.env.LOGOUT_URI}`;
         res.redirect(logoutUrl);
         // Redirect to login page after logout
     });

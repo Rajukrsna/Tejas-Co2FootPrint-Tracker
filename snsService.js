@@ -20,7 +20,7 @@ const sendSMS = async (message, phoneNumber) => {
                 DataType: 'String',
                 StringValue: 'Promotional', // or 'Promotional'
             },
-        },// Recipient's phone number in E.164 format
+        },// Recipient's phone cnumber in E.164 format
     };
 
     try {
