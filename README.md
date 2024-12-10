@@ -18,10 +18,13 @@ Tejas AI is an innovative application designed to help users **track, reduce, an
 - **Frontend**: Bootstrap
 - **Backend**: Node.js, Express.js, EJS
 - **Database**: MongoDB
+- **Authentication**: **AWS Cognito** for user authentication
+- **Notifications**: **AWS SNS** for sending SMS notifications when users register or perform significant activities.
 - **AI Services**:
- - **Meta-Llama-3.1-405B-Instruct**: For chatbot and eco-friendly suggestions.
- - **Llama-3.2-90B-Vision-Instruct**: For analyzing CO2 emissions from user-uploaded images.
- - **AWS Rekognition**: For analyzing the image and giving reward points to the user.
+  - **Meta-Llama-3.1-405B-Instruct**: For chatbot and eco-friendly suggestions.
+  - **Llama-3.2-90B-Vision-Instruct**: For analyzing CO2 emissions from user-uploaded images.
+  - **AWS Rekognition**: For analyzing the image and giving reward points to the user.
+  - **Lambda Function**: To integrate with **Cohere Foundation's LLM model** for providing **AI suggestions** based on the user's **daily activities** and **footprint reduction goals**.
 
 ---
 
