@@ -1,126 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Tejas AI</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
-    <style>
-        /* General Body Styling */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f8ff; /* Light blue background */
-            margin: 0;
-            padding: 0;
-            color: #2d6a4f; /* Dark green for text */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | DhyanAI</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      /* Add top padding to create space below the navbar */
+    }
 
-        /* Main Content Styling */
-        .container {
-            margin-top: 70px;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
+    .aws-logo {
+      width: 80px !important; /* Small size for the icon */
+      margin-left: 10px; /* Space between text and logo */
+      vertical-align: middle; /* Align vertically in the middle of the text */
+    }
 
-        /* Header Styling */
-        h1 {
-            font-size: 36px;
-            color: #40916c; /* Dark green */
-            margin-bottom: 20px;
-        }
+  
 
-        /* Form Styling */
-        .form-control {
-            padding-left: 3rem; /* Adds space for the icons */
-            border: 2px solid #74c69d; /* Subtle green border */
-            border-radius: 8px;
-            height: 45px;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #52b788; /* Darker green on focus */
-            box-shadow: 0 0 8px rgba(82, 183, 136, 0.5);
-        }
-
-        .form-label {
-            font-weight: bold;
-            color: #2d6a4f;
-        }
-
-        /* Button Styling */
-        .btn-primary {
-            background-color: #40916c;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 18px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn-primary:hover {
-            background-color: #52b788; /* Slightly lighter green on hover */
-        }
-
-        /* AWS Cognito Section */
-        .aws-logo {
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        .aws-logo img {
-            width: 150px;
-        }
-
-        .aws-cognito-text {
-            font-size: 18px;
-            color: #40916c;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        /* Footer Styling */
-        
-        a {
-            color: #40916c;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #52b788;
-            text-decoration: underline;
-        }
-    </style>
+   
+  </style>
 </head>
+
 <body>
-    <!-- Main Content -->
-    <div class="container">
-        <!-- AWS Cognito Logo and Text -->
-        <div class="aws-logo">
-            <img src="/public/Cog.png" alt="AWS Cognito Logo">
-        </div>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1><img src="/public/aiman.png" class="aws-logo" alt="AWS Cognito Logo">Welcome to TejasAI</h1>
+      <p>Tejas AI is an innovative platform designed to bring AI-powered solutions to human health and Well being. With seamless integration, personalized recommendations, and secure authentication via AWS Cognito, DhyanAI offers a simple yet powerful experience to manage your overall wellbeing- Physically and Mentally. Explore the potential of artificial intelligence in the most accessible way possible, while keeping your data safe and secure.</p>
 
-        <h1>Welcome to Tejas AI</h1>
-        <p class="aws-cognito-text">Sign in using AWS Cognito for secure and seamless authentication.</p>
+<br>
+      <!-- Login Form -->
+      <p class="aws-cognito-text">Sign in using AWS Cognito for secure and seamless authentication.</p>
 
-        <!-- Login Form -->
-       
-           
-            <a href="/login" type="submit" class="btn btn-primary">Login</a>
-
-
-       
+      <a href="/login" type="submit" class="btn btn-primary">Login</a>
+     
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="col-md-3">
+      <div class="content-section">
+        <img src="public//aiman.png" alt="App Image">
+        
+      </div>
+    </div>
+  </div>
 </body>
 </html>

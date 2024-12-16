@@ -62,6 +62,7 @@ app.use('/calculate', require('./routes/calculate'));
 app.use('/ocrDedect', require('./routes/ocrDedect'))
 app.use('/contest', require('./routes/contest'));
 app.use('/badgesRedeem', require('./routes/badgesRedeem'))
+app.use('/profile', require('./routes/profile'));
 // Root route
 
 //authentication using aws cognito

@@ -1,445 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
-        body{
-            font-family: 'Roboto', sans-serif;
-
+        body {
+            background: url('https://www.transparenttextures.com/patterns/black-linen.png'), linear-gradient(135deg, #eef2f3, #8e9eab);
+            font-family: 'Poppins', sans-serif;
+         
         }
-        /* Dashboard-specific styles scoped to dashboard-wrapper */
-        .dashboard-wrapper {
-            background-color: #f4f9f4; /* Light greenish background */
-            padding: 30px;
+
+
+        .profile-card {
+            border: none;
             border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
-        .dashboard-wrapper h1,
-        .dashboard-wrapper h3 {
-            color: #2c6e49; /* Forest green for headings */
-            font-weight: bold;
-        }
-
-        .dashboard-wrapper p,
-        .dashboard-wrapper li {
-            color: #52734d; /* Medium green for text */
-        }
-
-        .dashboard-wrapper .row div {
-            background-color: #e6f5e6; /* Light green for cards */
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .dashboard-wrapper ul {
-            list-style-type: none;
-            padding-left: 0;
-            overflow-y: auto;
-        }
-
-        .dashboard-wrapper ul li {
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #d9f7d4; /* Light green background for suggestions */
-            border-left: 5px solid #2c6e49; /* Green left border for each suggestion */
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .dashboard-wrapper ul li:hover {
-            transform: scale(1.05); /* Slightly enlarge the suggestion card on hover */
-        }
-
-        /* Flexbox layout for consistent size and behavior */
-        .dashboard-wrapper .col-md-4 {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .dashboard-wrapper .col-md-4 .points-card,
-        .dashboard-wrapper .col-md-4 .co2-card {
-            flex-grow: 1; /* Let these sections grow to fill space */
-        }
-
-        .dashboard-wrapper .col-md-4 .suggestions-card {
-            flex-grow: 2; /* Suggestion card takes a bit more space */
-            max-height: 400px; /* Set a max height for the suggestions section */
-            overflow-y: auto; /* Scrollable if content overflows */
-        }
-
-        .dashboard-wrapper footer {
-            margin-top: 30px;
+        .profile-header {
+            background: url('https://source.unsplash.com/random/1200x400?nature') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 40px;
             text-align: center;
-            color: #2c6e49;
-            font-size: 0.9rem;
+            position: relative;
         }
 
-        .points-card,
-        .co2-card {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        .profile-picture {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .profile-picture {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    object-fit: cover;
+    background-color: #f0f0f0;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    transition: box-shadow 0.3s;
+}
+
+.profile-pic-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-pic-wrapper .edit-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.profile-pic-wrapper .edit-overlay:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.profile-picture:hover {
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+        .profile-body {
+            padding: 100px 30px 30px;
+            background: #f9f9f9;
         }
 
-        .points-card h3,
-        .co2-card h3 {
-            color: #2c6e49;
+        .edit-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff9800;
+            border: none;
+            color: #fff;
+        }
+
+        .edit-button:hover {
+            background-color: #fb8c00;
+        }
+
+        .form-label {
             font-weight: bold;
         }
-        .dashboard-wrapper .col-md-4 {
-    overflow: visible; /* Ensure overflow is not clipped */
-}
-.badge-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
 
-.badge {
-    text-align: center;
-    opacity: 0.5; /* Disabled badges are semi-transparent */
-    transition: opacity 0.3s ease;
-}
-
-.badge.enabled {
-    opacity: 1; /* Fully visible for enabled badges */
-}
-
-.badge img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.badge p {
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-
-
-        .points-card p,
-        .co2-card p {
-            color: #52734d;
-        }
-        .col-md-4 {
-    display: flex; /* Ensure content is flexibly arranged */
-    flex-direction: column; /* Stack items vertically */
-    justify-content: center; /* Center the content */
-}
-
-
-        /* CO2 Progress Bar Styling */
-        .progress-bar {
-            height: 30px;
-            border-radius: 10px;
-            overflow: visible;
+        .save-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        .progress-bar-success {
-            background-color: #28a745;
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
         }
 
-        .progress-bar-warning {
-            background-color: #ffc107;
+        .card-body h5, .card-body p {
+            font-size: 1.1rem;
+            color: #555;
         }
 
-        .progress-bar-danger {
-            background-color: #dc3545;
+        .card {
+            border-radius: 15px;
         }
-
 
     </style>
 </head>
-
 <body>
-    <div class="dashboard-wrapper container mt-4">
-        <h2 class="text-center">Welcome, <%= username %>!</h2>
-
-       
-        <div class="row mt-4">
-            <!-- Points Section -->
-      
-            <div class="col-md-4">
-                <div class="points-card" style="background: linear-gradient(135deg, #3b8d99, #6a11cb); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Your Points</h3>
-                    
-                    <!-- Points Data -->
-                    <div style="font-size: 2em; color: white; font-weight: bold; margin-bottom: 20px; text-align: center;">
-                        <p class="display-6" style="color: black;"><%= points %></p>
-                    </div>
-            
-                    <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your current points</p>
-                    
-                    <!-- Redeem Points Button -->
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button style="background-color: #ff9800; color: white; padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);">
-                        <a href="/badgesRedeem" >  Redeem Points</a> 
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Profile Card Section -->
+            <div class="col-md-8 mb-4">
+                <div class="card profile-card">
+                    <div class="profile-header">
+                        <form action="/profile/upload-profile-pic" method="POST" enctype="multipart/form-data" id="profile-pic-form">
+                            <div class="profile-pic-wrapper position-relative">
+                                <img src="<%= user.profileImage %>" alt="Profile Picture" class="profile-picture" id="profile-pic">
+                                <label for="profileImage" class="edit-overlay">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                                <input type="file" id="profileImage" name="profileImage" class="d-none" onchange="document.getElementById('profile-pic-form').submit();">
+                            </div>
+                        </form>
+                        <h2 class="mt-4"><%= user.username %></h2>
+                        <button id="edit-button" class="btn edit-button">
+                            <i class="fas fa-edit"></i> Edit
                         </button>
                     </div>
+                    <div class="profile-body">
+                        <form action ="/dashboard/change-profile" method="POST" id="profile-form" >
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" value="<%= user.username %>" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" value="<%= user.email %>" disabled>
+                            </div>
+                           
+                            
+                            <div class="save-button">
+                                <button type="submit" id="save-button" class="btn btn-success d-none">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+
+            <!-- Habits & Daily Intake Section -->
+            <div class="col-md-4">
+                <div class="card habits-section shadow-lg">
+                    <div class="card-header">
+                        <i class="fas fa-running"></i> Habits & Daily Intake
+                    </div>
+                    <div class="card-body">
+                        <h5><strong>Points Scored</strong> <%= user.points %></h5>
+                       
+                     
             
-
-            <div class="col-md-4">
-                <div class="card">
-            <h2>CO₂ Activity Breakdown</h2>
-            <canvas id="myPieChart"></canvas>
-            </div>
-        </div>
-           <!-- CO₂ Footprint Section -->
-<div class="col-md-4">
-    <div class="co2-card" style="background: linear-gradient(135deg, #52b788, #ffadad); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h3 style="color: white; font-size: 1.5em; margin-bottom: 20px; text-align: center;">CO₂ Footprint</h3>
-        
-        <!-- Icon Section -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/earth-planet.png"  alt="Earth Icon" />
-        </div>
-        
-        <!-- Emission Data -->
-        <div style="font-size: 1.2em; color: white; margin-bottom: 10px;">
-            <p><strong>Emitted:</strong> <%= co2Emitted %> kg</p>
-            <p><strong>Maximum Threshold:</strong> <%= maxCo2Footprint %> kg</p>
-            <p><strong>Contribution:</strong> <%= contribution %>%</p>
-        </div>
-
-        <!-- Progress Bar -->
-        <div style="width: 100%; height: 15px; background-color: #f1f1f1; border-radius: 10px; overflow: hidden;">
-            <div style="width: <%= contribution %>%; height: 100%; background-color: #ffb84d;"></div>
-        </div>
-        <p style="text-align: center; color: white; font-size: 0.9em; margin-top: 10px;">Your contribution to the total CO₂ footprint amoung the users</p>
-    </div>
-</div>
-           
-
-            <div class="col-md-4">
-              
- 
-        <div class="card">
-            <h3>Emission Vs Reduction for <%= new Date().toLocaleString('default', { month: 'long' }) %></h3>
-    <canvas id="categoryChart" width="400" height="400"></canvas>
-     
-   </div>
-</div>
-  <!-- Suggestions Section -->
-  <div class="col-md-8">
-    <div class="suggestions-card">
-        <h3>Suggestions</h3>
-        <ul>
-            <% if (typeof suggestions !== 'undefined' && suggestions && suggestions.length > 0) { %>
-                <% suggestions.forEach((suggestion, index) => { %>
-                    <li>
-                        <strong>Suggestion <%= index + 1 %>:</strong> <%= suggestion %>
-                    </li>
-                <% }) %>
-            <% } else { %>
-                <li>No suggestions available at the moment.</li>
-            <% } %>
-        </ul>
-
-
-            <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#activityModal">
-               Get Suggestion From AI
-            </button>
-
-    </div>
-</div>
-
-
-          
-        </div>
-        
-    </div>
-           
-    
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="activityModalLabel">Log Your Activities</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/activityRoute2/log" method="POST">
-                        <!-- Transportation -->
-                        <div class="mb-3">
-                            <label for="transportation" class="form-label">How do you commute to work/school?</label>
-                            <select class="form-select" id="transportation" name="transportation" required>
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="car_petrol">Car (Petrol)</option>
-                                <option value="car_diesel">Car (Diesel)</option>
-                                <option value="public_transport">Public Transport</option>
-                                <option value="bicycle">Bicycle</option>
-                                <option value="walk">Walking</option>
-                                <option value="electric_vehicle">Electric Vehicle</option>
-                            </select>
-                        </div>
-
-                        <!-- Energy Usage -->
-                        <div class="mb-3">
-                            <label for="energy" class="form-label">What type of energy do you use at home?</label>
-                            <select class="form-select" id="energy" name="energy" required>
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="renewable">Renewable (Solar, Wind, etc.)</option>
-                                <option value="nonrenewable">Non-Renewable (Coal, Gas, etc.)</option>
-                            </select>
-                        </div>
-
-                        <!-- Diet -->
-                        <div class="mb-3">
-                            <label for="diet" class="form-label">What is your diet preference?</label>
-                            <select class="form-select" id="diet" name="diet" required>
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="vegetarian">Vegetarian</option>
-                                <option value="vegan">Vegan</option>
-                                <option value="non_vegetarian">Non-Vegetarian</option>
-                            </select>
-                        </div>
-
-                        <!-- Recycling -->
-                        <div class="mb-3">
-                            <label for="recycling" class="form-label">Do you recycle at home?</label>
-                            <select class="form-select" id="recycling" name="recycling" required>
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="always">Always</option>
-                                <option value="sometimes">Sometimes</option>
-                                <option value="rarely">Rarely</option>
-                            </select>
-                        </div>
-
-                        <!-- Travel -->
-                        <div class="mb-3">
-                            <label for="travel" class="form-label">How many flights do you take per year?</label>
-                            <input type="number" class="form-control" id="travel" name="travel" placeholder="Enter number of flights" required>
-                        </div>
-
-                        <!-- Submit -->
-                        <button type="submit" class="btn btn-primary w-100">Submit</button>
-                    </form>
+            
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-        </div>
-    </div>
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Bootstrap JS and Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
+    <!-- JavaScript for Edit and Save Functionality -->
+    <script>
+        const editButton = document.getElementById('edit-button');
+        const saveButton = document.getElementById('save-button');
+        const formInputs = document.querySelectorAll('#profile-form input');
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        async function fetchBreakdown() {
-            try {
-                const response = await fetch('/activityRoute2/category-breakdown');
-                const data = await response.json();
+        // Toggle Edit Mode
+        editButton.addEventListener('click', () => {
+            formInputs.forEach(input => input.disabled = false);
+            editButton.classList.add('d-none');
+            saveButton.classList.remove('d-none');
+        });
 
-                // Prepare data for the chart
-                const labels = data.map(item => item._id); // ['Emission', 'Reduction']
-                const values = data.map(item => item.totalCo2); // Total CO2 values
+        // Handle Save Button Click
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                maintenanceCalories: document.getElementById('calories').value,
+                height: document.getElementById('height').value,
+                weight: document.getElementById('weight').value,
+                healthIssue: document.getElementById('health-issue').value,
+            };
 
-                // Render chart
-                const ctx = document.getElementById('categoryChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            backgroundColor: ['#FF6384', '#36A2EB'], // Colors for categories
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                            legend: {
-                                position: 'top'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (tooltipItem) {
-                                        const value = tooltipItem.raw;
-                                        return `${tooltipItem.label}: ${value.toFixed(2)} kg CO2`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error('Error fetching breakdown:', error);
-            }
-        }
-
-        fetchBreakdown();
-    });
-</script>
-
-
-<script>
-    // Fetch the CO₂ breakdown data from the server
-    document.addEventListener('DOMContentLoaded', function () {
-        async function fetchBdown() {
-            const response = await fetch('/activityRoute2/activity-breakdown');
-            const data = await response.json();
-
-            const categories = data.categories.map(item => item.label);
-            const co2Values = data.categories.map(item => item.value);
-
-            // Create pie chart with fetched data
-            const ctx = document.getElementById('myPieChart').getContext('2d');
-            const myPieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        data: co2Values,
-                        backgroundColor: ['#52b788', '#ffadad', '#ffb84d', '#ffd700', '#ff9999'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + ' kg CO₂';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-    fetchBdown();
-    });
-</script>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-
-</html>
+            // After saving, disable the inputs again
+            formInputs.forEach(input => input.disabled = true);
+            saveButton.classList.add('d-none');
+            editButton.classList.remove('d-none');
+        });
+        </script>

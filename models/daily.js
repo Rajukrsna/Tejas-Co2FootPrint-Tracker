@@ -12,15 +12,15 @@ const dailySchema = new mongoose.Schema({
     
     co2_transportation: {
         type: Number,
-        required: true
+        default:0
     },
     co2_energy: {
         type: Number,
-        required: true
+        default:0
     },
     co2_diet: {
         type: Number,
-        required: true
+        default:0
     },
     date: {
         type: Date,

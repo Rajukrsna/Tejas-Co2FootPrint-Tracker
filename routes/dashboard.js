@@ -83,30 +83,45 @@ const analyzeImageWithAI = async (imageUrl) => {
 
     const data = {
         model: "Llama-3.2-11B-Vision-Instruct",
-        
         messages: [
-           
             {
                 "role": "user",
                 "content": [
                     {
-                "type": "text",
-                "text": "Calculate approximately the amount of co2 footprint the thing in the image would emit. Summarise your content in just 2 lines"
-            },
-            {
-                "type": "image_url",
-                "image_url": {
-                   url: `data:image/jpeg;base64,${imageUrl}`}
-            }]
-        }
+                        "type": "text",
+                        "text": `You are an AI model that calculates the CO₂ footprint of objects shown in images. Given the following image, analyze it and estimate the CO₂ footprint emitted. The output should be structured in the following JSON format:
+
+                        {
+                          "object": "{Detected Object}",
+                          "estimated_co2_footprint_kg": {Estimated CO₂ Footprint in kg}
+                        }
+                        
+                        Ensure:
+                        1. The "object" field accurately describes the detected object.
+                        2. The "estimated_co2_footprint_kg" is a numerical value representing the CO₂ footprint in kilograms.
+                        3. Respond only with the proper JSON structure, no additional text.
+                        
+                        `
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": `data:image/jpeg;base64,${imageUrl}`
+                        }
+                    }
+                ]
+            }
         ],
         temperature: 0.1,
         top_p: 0.1,
     };
+    
+    
 
     try {
         const response = await axios.post(url, data, { headers });
         const message = response.data.choices[0].message.content;
+        console.log(message);
         return message.trim(); // Return recognized waste type
     } catch (error) {
         console.error("Error calling Sambanova API:", error.response?.data || error.message);
@@ -166,14 +181,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
         // Pass data to the dashboard view
         res.render('dashboard', {
-            user,
-            username: user.username,
-            points: user.points,
-            co2Percentage,
-            co2Emitted,
-            maxCo2Footprint,
-            contribution,
-            suggestions: suggestionsArray,
+            user
         });
     } catch (err) {
         console.error('Error loading dashboard:', err);

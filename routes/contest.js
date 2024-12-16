@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // Assuming you have a Contest model for MongoDB
+const User= require('../models/User')
 const Contest = require("../models/Contest");
 const authenticateToken= require('../middlewares/auth')
 // Sample data (In real applications, fetch from the database)
@@ -147,20 +148,21 @@ const contests = [
   
 
 
-router.get('/',authenticateToken, (req,res)=>{
-    res.render('contest',{contests})
+router.get('/',authenticateToken, async (req,res)=>{
+  const user= await User.findById(req.user.userId)
+    res.render('contest',{user,contests})
 });
 
 
 
 
 // Route to serve contest details
-router.get("/:id", (req, res) => {
+router.get("/:id", authenticateToken,async(req, res) => {
   const contestId = parseInt(req.params.id);
   const contest = contests.find((c) => c.id === contestId);
-
+const user= await User.findById(req.user.userId)  
   if (contest) {
-    res.render("contestDetails", { contest });
+    res.render("contestDetails", { user,contest });
   } else {
     res.status(404).send("Contest not found");
   }
@@ -196,13 +198,14 @@ router.post("/register", authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/enter/:id',async (req,res)=>{
+router.get('/enter/:id',authenticateToken,async (req,res)=>{
   const contestId = parseInt(req.params.id);
+  const user= await User.findById(req.user.userId)
 
   const contest= await Contest.findOne({id: contestId})
 
   //console.log(contest)
 
-  res.render('parContest', { contest })
+  res.render('parContest', {user, contest })
 })
 module.exports = router;
