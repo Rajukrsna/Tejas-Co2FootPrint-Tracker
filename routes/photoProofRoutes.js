@@ -148,7 +148,8 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
   const { file, body } = req;
   const { category } = body;
   const{val} =req.body// Extracting the val =false
- 
+  const user = await User.findById(req.user.userId);
+
  
   
 
@@ -169,7 +170,7 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
 
 
     const labels = await analyzeImage(bucketName, objectKey);
-
+console.log(labels)
 
     if (!Array.isArray(labels)) {
         return res.status(500).json({ message: 'Error: Labels are not an array' });
@@ -190,7 +191,7 @@ const matchedLabel = labels.some(label => {
 
 if (matchedLabel) {
   
-  const user = await User.findById(req.user.userId);
+
   if( val=== "true")
     user.contestPoints += 5;
   else
@@ -199,6 +200,7 @@ if (matchedLabel) {
 
  // Create a transaction record
  const transaction = new Transaction({
+  userId: user._id,
   username: user.username,
   pointsAwarded: 5,
 });
@@ -226,7 +228,7 @@ await transaction.save();
       console.log("New activity created for the user.");
   }
 
-  res.status(200).json({ message: 'Points awarded successfully!' });
+  res.status(200).json({ message: 'Points awarded successfully!', newPoints: user.points, ok:"success"    });
    
   } else {
     // Respond with wrong category message if no match is found
@@ -273,9 +275,10 @@ async function analyzeImage(bucketName, objectKey) {
 }
 
 // Get recent transactions
-router.get('/transactions', async (req, res) => {
+router.get('/transactions',authenticateToken, async (req, res) => {
   try {
-      const recentTransactions = await Transaction.find({})
+    const user=req.user.userId;
+      const recentTransactions = await Transaction.find({userId:req.user.userId })
           .sort({ timestamp: -1 }) // Sort by newest first
           .limit(10); // Fetch the latest 10 transactions
       res.json(recentTransactions);

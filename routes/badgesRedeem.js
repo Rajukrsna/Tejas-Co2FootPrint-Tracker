@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/User');
-
+const Transaction= require('../models/Transactions');
 const authenticateToken = require('../middlewares/auth')
 
 
@@ -17,6 +17,7 @@ router.get('/',authenticateToken, async(req, res) => {
 router.post('/redeem',authenticateToken, async(req, res) => {
     const reward = req.body.reward;
     let message = '';
+    let msg=0;
     const user = await User.findById(req.user.userId);
 
     switch (reward) {
@@ -24,9 +25,11 @@ router.post('/redeem',authenticateToken, async(req, res) => {
             if (user.points >= 20) {
                 user.points -= 20;
                 user.multiplier = 2;
+                msg=20;
                 message = 'Reward successfully redeemed: Tree! Your future points will be doubled.';
             } else {
                 message = 'Insufficient points to redeem a tree.';
+              
             }
             break;
 
@@ -35,6 +38,7 @@ router.post('/redeem',authenticateToken, async(req, res) => {
                 user.points -= 30;
                 user.multiplier=3
                 message = 'Reward successfully redeemed: Bicycle!';
+                msg=30;
             } else {
                 message = 'Insufficient points to redeem a bicycle.';
             }
@@ -45,6 +49,7 @@ router.post('/redeem',authenticateToken, async(req, res) => {
                 user.points -= 40;
                 user.multiplier=4;
                 message = 'Reward successfully redeemed: Electric Scooter!';
+                msg=40;
             } else {
                 message = 'Insufficient points to redeem an electric scooter.';
             }
@@ -54,6 +59,14 @@ router.post('/redeem',authenticateToken, async(req, res) => {
             message = 'Invalid reward selected.';
     }
 await user.save();
+if(msg!=0)
+{
+const Trans= new Transaction({
+  username: user.username,
+  pointsReduced: msg,
+});
+await Trans.save();
+}
     res.render('redump', { user, message });
 });
 

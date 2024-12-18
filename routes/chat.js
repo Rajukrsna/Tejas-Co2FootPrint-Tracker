@@ -23,22 +23,23 @@ router.post('/chat2', async (req, res) => {
         const response = await axios.post(
             `${SAMBANOVA_API_URL}/chat/completions`,
             {
-                model: 'Meta-Llama-3.1-8B-Instruct',
-                messages: [
-                    { role: "system", content: "You are a helpful assistant" },
-                    { role: "user", content: userMessage }
-                ],
-                temperature: 0.1,
-                top_p: 0.1
+              model: 'Meta-Llama-3.1-8B-Instruct',
+              messages: [
+                { role: "system", content: "You are an assistant specialized in helping users reduce their carbon footprint. Provide actionable advice, tips, and insights on reducing CO₂ emissions." },
+                { role: "user", content: userMessage }
+              ],
+              temperature: 0.5,
+              top_p: 0.9
             },
             {
-                headers: {
-                    Authorization: `Bearer ${SAMBANOVA_API_KEY}`,
-                    'Content-Type': 'application/json',
-                }
+              headers: {
+                Authorization: `Bearer ${SAMBANOVA_API_KEY}`,
+                'Content-Type': 'application/json',
+              }
             }
-        );
-
+          );
+          
+console.log(response.data.choices[0].message.content)
         res.json({ reply: response.data.choices[0].message.content });
     } catch (error) {
         console.error("SambaNova API call failed:", error.response?.data || error.message);

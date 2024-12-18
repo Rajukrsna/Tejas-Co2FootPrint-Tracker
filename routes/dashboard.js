@@ -203,6 +203,22 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.post('/saveData', authenticateToken, async(req,res)=>
+{    
+    try {
+    const name= req.body.name;
+    const  email= req.body.email;
+    console.log(name,email);
+    const user = await User.findById(req.user.userId);
+    user.username=name;
+    user.email=email;
+    await user.save();
+    res.status(200).json({message:"Data saved successfully"});
+    }
+    catch{
+        res.status(500).json({message:"Data not saved"});
+    }
+});
 
   
 

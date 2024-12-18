@@ -12,8 +12,42 @@
 <style>
      .container {
   background-color: transparent !important; /* Ensures no background color */
-  padding: 20px; /* Optional: Add padding for better content spacing */
+  padding: 80px !important; /* Optional: Add padding for better content spacing */
   box-shadow: none; /* Remove any default shadow if applied */
+}
+/* Graph Panel */
+.graph-panel {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Initially hidden off-screen */
+    width: 350px;
+    height: 100%;
+    background-color: #f8f9fa;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Arrow Button */
+.toggle-button {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+    border-radius: 5px 0 0 5px;
+    transition: right 0.3s ease;
+}
+
+.toggle-button i {
+    font-size: 1.5rem;
 }
 
 </style>
@@ -107,6 +141,23 @@
         </div>
     </div>
 
+    <!-- Graph Panel -->
+<div id="graphPanel" class="graph-panel">
+    <div class="graph-content">
+        <h4 class="text-center mb-3">Your Points Insights</h4>
+        <canvas id="pointsGraph" width="300" height="200"></canvas>
+    </div>
+    <div class="graph-content">
+        <h4>Emission Vs Reduction for <%= new Date().toLocaleString('default', { month: 'long' }) %></h4>
+        <canvas id="categoryChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<!-- Arrow Button to Toggle Panel -->
+<button id="toggleButton" class="toggle-button">
+    <i class="fas fa-chevron-left"></i>
+</button>
+
     <!-- Modal for Uploading Proof -->
     <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -133,7 +184,109 @@
             </div>
         </div>
     </div>
-
+    <script>
+        const graphPanel = document.getElementById('graphPanel');
+        const toggleButton = document.getElementById('toggleButton');
+        const toggleIcon = toggleButton.querySelector('i');
+    
+        // Toggle the graph panel visibility
+        toggleButton.addEventListener('click', () => {
+            if (graphPanel.style.right === '0px') {
+                graphPanel.style.right = '-350px';
+                toggleIcon.classList.replace('fa-chevron-right', 'fa-chevron-left');
+            } else {
+                graphPanel.style.right = '0px';
+                toggleIcon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+            }
+        });
+    
+        // Initialize the graph with example data using Chart.js
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('pointsGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Bicycle', 'Recycled Plastic', 'Veg Day', 'Carpool', 'Tree Planting'],
+                    datasets: [{
+                        label: 'Points Earned',
+                        data: [10, 15, 20, 25, 30], // Example data points
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <!-- Include Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            async function fetchBreakdown() {
+                try {
+                    const response = await fetch('/activityRoute2/category-breakdown');
+                    const data = await response.json();
+      
+                    // Prepare data for the chart
+                    const labels = data.map(item => item._id); // ['Emission', 'Reduction']
+                    const values = data.map(item => item.totalCo2); // Total CO2 values
+      
+                    // Render chart
+                    const ctx = document.getElementById('categoryChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar', // Change to bar chart
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'CO2 Emission and Reduction', // Label for the dataset
+                                data: values,
+                                backgroundColor: ['#FF6384', '#36A2EB'], // Colors for categories
+                                borderColor: ['#FF6384', '#36A2EB'], // Border colors for each bar
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true, // Ensure the y-axis starts from 0
+                                    title: {
+                                        display: true,
+                                        text: 'Total CO2 (kg)' // Y-axis label
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (tooltipItem) {
+                                            const value = tooltipItem.raw;
+                                            return `${tooltipItem.label}: ${value.toFixed(2)} kg CO2`; // Tooltip format
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error fetching breakdown:', error);
+                }
+            }
+      
+            fetchBreakdown();
+        });
+      </script>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
@@ -170,7 +323,8 @@ console.log(result);
                 const messageBox = document.getElementById('messageBox');
                 messageBox.style.display = 'block';
 
-                if (result.status === 'success') {
+                if (result.ok === 'success') {
+                    animatePointsUpdate(result.newPoints);
                     messageBox.style.backgroundColor = '#d4edda'; // Green background for success
                     messageBox.style.color = '#155724'; // Dark green text
                 } else {
@@ -179,7 +333,7 @@ console.log(result);
                 }
 
                 messageBox.innerHTML = result.message;
-
+                
                 // Hide the message box after 3 seconds
                 setTimeout(() => {
                     messageBox.style.display = 'none';
@@ -190,6 +344,30 @@ console.log(result);
                 console.error('Error uploading file:', error);
             }
         });
+
+
+
+        function animatePointsUpdate(newPoints) {
+    const pointsDisplay = document.getElementById('points-display');
+    const oldPoints = parseInt(pointsDisplay.textContent, 10);
+
+    // Create an animation effect
+    let currentPoints = oldPoints;
+    const step = (newPoints - oldPoints) / 50; // Increment step for smoother animation
+
+    function update() {
+      currentPoints += step;
+      pointsDisplay.textContent = Math.round(currentPoints);
+
+      if ((step > 0 && currentPoints < newPoints) || (step < 0 && currentPoints > newPoints)) {
+        requestAnimationFrame(update);
+      } else {
+        pointsDisplay.textContent = newPoints;
+      }
+    }
+
+    update();
+  }
     </script>
 
     <script>

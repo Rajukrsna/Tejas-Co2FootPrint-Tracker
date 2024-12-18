@@ -12,13 +12,13 @@
 <style>
   .container {
   background-color: transparent !important; /* Ensures no background color */
-  padding: 20px; /* Optional: Add padding for better content spacing */
+  padding: 80px !important; /* Optional: Add padding for better content spacing */
   box-shadow: none; /* Remove any default shadow if applied */
 }
   body
   {
     font-family: 'Roboto', sans-serif;
-
+    padding: 20px;
   }
   .nav-tabs .nav-link {
   color: black !important; 
@@ -65,7 +65,6 @@
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
-        background-color: transparent !important; 
       }
     
       .card:hover {
@@ -312,13 +311,13 @@
 </div>    
 
 
-  
+  <br>
      <!-- Card Header -->
 <div class="card-header text-center" style="background-color: #f5f5f5; border-bottom: 1px solid #ddd; padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
   <h4 style="margin: 0; color: #333; font-weight: 600;">Upload and Analyze CO2 Emission</h4>
 </div>
+<br>
 
-<div class="container mt-5">
   <div class="row justify-content-center">
       <!-- Left Column (Image Upload) -->
       <div class=" card col-md-4">
@@ -338,7 +337,7 @@
       </div>
 
       <!-- Middle Column (CO2 Emission Analysis) -->
-      <div class="col-md-4">
+      <div class="col-md-5">
           <div class="result-card" id="resultContainer" style="background-color: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
               <h5 class="result-heading text-center" style="color: #333; margin-bottom: 10px; font-weight: 500;">CO2 Emission Analysis</h5>
               <p id="suggestion" class="result-suggestion text-center" style="font-size: 16px; font-weight: bold; color: #555;">Awaiting analysis...</p>
@@ -348,9 +347,9 @@
       </div>
 
       <!-- Right Column (Bill Upload) -->
-      <div class=" card col-md-4">
+      <div class=" card col-md-3">
         <div class="uploaded-image-preview text-center mb-4">
-          <p class="text-center text-muted">Extract bill details and categorize your spending with ease.</p>
+          <p class="text-center">Extract CO2 Footprint From Bills</p>
           <img id="uploadedImage2" src="https://via.placeholder.com/400x250.png?text=Sample+Image" alt="Uploaded Image Preview" class="img-fluid" style="max-height: 250px; border-radius: 12px; display: block; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" />
         </div>
          
@@ -446,7 +445,8 @@ const cardHtml = `
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">CO₂ Footprint Analysis</h5>
-            <p class="card-text"><strong>Total Estimated CO₂ Footprint:</strong> ${data.total_co2_footprint_kg || "N/A"} kg</p>
+            <p class="card-text"><strong>Total Estimated CO₂ Footprint:</strong> <span id="co2-footprint-value">${data.total_co2_footprint_kg || "N/A"}</span> kg</p>
+           
             <h6 class="card-subtitle mb-2 text-muted">Item Breakdown</h6>
             <ul class="list-group list-group-flush">
                 ${data.items.map(item => `
@@ -455,13 +455,27 @@ const cardHtml = `
                     </li>
                 `).join('')}
             </ul>
+             <button id="update-co2-btn" class="btn btn-primary">Update CO₂ Footprint</button>
         </div>
     </div>
 `;
 
-        // Insert the card into the DOM (assuming 'resultContainer' is a div in your HTML)
-        const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = cardHtml;
+resultContainer.innerHTML = cardHtml;
+
+document.getElementById('update-co2-btn').addEventListener('click', updateCO2Footprint);
+function updateCO2Footprint(){
+// Insert the card into the DOM (assuming 'resultContainer' is a div in your HTML)
+const resultContainer = document.getElementById('resultContainer');
+// Get the current value from the element and convert it to a number
+let currentFootprint = parseFloat(document.getElementById("monthly-footprint").textContent) || 0;
+
+// Add the new CO₂ value
+currentFootprint += parseFloat(data.total_co2_footprint_kg);
+
+// Update the element with the new total CO₂ footprint
+document.getElementById("monthly-footprint").textContent = currentFootprint.toFixed(2);
+};
+        
 
     } else {
         resultSuggestion.textContent = "Error analyzing CO₂ footprint.";
@@ -743,13 +757,15 @@ myPieChart = new Chart(ctx, {
 
         // Create the Bootstrap card
         const cardHtml = `
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
+      <div class="card" style="width: 18rem>
+
+                <div class="card-body ">
                     <h5 class="card-title">CO₂ Footprint Analysis</h5>
                     <p class="card-text"><strong>Dedected Object:</strong> ${data.object || "N/A"}</p>
                     <p class="card-text"><strong>Estimated CO₂ Footprint:</strong> ${data.estimated_co2_footprint_kg || "N/A"} kg</p>
                 </div>
-            </div>
+     
+         </div>
         `;
 
         // Insert the card into the DOM (assuming 'resultContainer' is a div in your HTML)

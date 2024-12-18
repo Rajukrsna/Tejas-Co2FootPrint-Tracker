@@ -5,8 +5,9 @@ const User = require('../models/User');
 const Activity = require('../models/Activity'); // Fixed typo in path
 const Daily = require('../models/daily')
 // Routes
-router.get("/",authenticateToken, (req, res) => {
-    res.render("calculate");
+router.get("/",authenticateToken , async (req, res) => {
+    const user = await User.findById(req.user.userId);
+    res.render("calculate",{user});
 });
 
 router.post("/log", authenticateToken, async (req, res) => { // Added async for asynchronous operations
